@@ -6,7 +6,7 @@ import { IoIosWarning } from "react-icons/io";
 import { TiTick } from "react-icons/ti";
 import { useLanguage } from "../context/LanguageContext";
 
-const Auth = ({ isOpen, onClose }) => {
+const Auth = ({ isOpen, onClose, onLoginSuccess }) => { // Thêm prop onLoginSuccess
   const [step, setStep] = useState(1);
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
@@ -90,6 +90,10 @@ const Auth = ({ isOpen, onClose }) => {
       setEmail("");
       setEmailError("");
       setPasswordError("");
+      // Gọi callback onLoginSuccess với email khi đăng nhập thành công
+      if (onLoginSuccess) {
+        onLoginSuccess(email);
+      }
     }, 1500);
   };
 
@@ -99,6 +103,69 @@ const Auth = ({ isOpen, onClose }) => {
     setEmailError("");
     setPasswordError("");
     sessionStorage.removeItem("tempEmail");
+  };
+
+  // Thêm hàm xử lý đăng nhập với Google
+  const handleGoogleLogin = () => {
+    // Giả lập đăng nhập Google thành công với email demo
+    const demoEmail = "user@gmail.com";
+    console.log("Đăng nhập với Google:", demoEmail);
+    
+    setSuccessMessage(t.loginSuccess.replace("{email}", demoEmail));
+    setShowSuccess(true);
+    
+    setTimeout(() => {
+      setShowSuccess(false);
+    }, 3000);
+    
+    setTimeout(() => {
+      onClose();
+      if (onLoginSuccess) {
+        onLoginSuccess(demoEmail);
+      }
+    }, 1500);
+  };
+
+  // Thêm hàm xử lý đăng nhập với Facebook
+  const handleFacebookLogin = () => {
+    // Giả lập đăng nhập Facebook thành công với email demo
+    const demoEmail = "user@facebook.com";
+    console.log("Đăng nhập với Facebook:", demoEmail);
+    
+    setSuccessMessage(t.loginSuccess.replace("{email}", demoEmail));
+    setShowSuccess(true);
+    
+    setTimeout(() => {
+      setShowSuccess(false);
+    }, 3000);
+    
+    setTimeout(() => {
+      onClose();
+      if (onLoginSuccess) {
+        onLoginSuccess(demoEmail);
+      }
+    }, 1500);
+  };
+
+  // Thêm hàm xử lý đăng nhập với Apple
+  const handleAppleLogin = () => {
+    // Giả lập đăng nhập Apple thành công với email demo
+    const demoEmail = "user@apple.com";
+    console.log("Đăng nhập với Apple:", demoEmail);
+    
+    setSuccessMessage(t.loginSuccess.replace("{email}", demoEmail));
+    setShowSuccess(true);
+    
+    setTimeout(() => {
+      setShowSuccess(false);
+    }, 3000);
+    
+    setTimeout(() => {
+      onClose();
+      if (onLoginSuccess) {
+        onLoginSuccess(demoEmail);
+      }
+    }, 1500);
   };
 
   const iconStyle = {
@@ -253,17 +320,26 @@ const Auth = ({ isOpen, onClose }) => {
                 <span style={{ background: "#fff", padding: "0 15px", color: "#999", fontSize: "14px" }}>{t.or}</span>
               </div>
 
-              <button style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "12px", padding: "12px", marginBottom: "12px", border: "1px solid #ddd", borderRadius: "4px", cursor: "pointer", fontSize: "15px", fontWeight: "500", width: "100%", backgroundColor: "#fff", color: "#333" }}>
+              <button 
+                onClick={handleGoogleLogin}
+                style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "12px", padding: "12px", marginBottom: "12px", border: "1px solid #ddd", borderRadius: "4px", cursor: "pointer", fontSize: "15px", fontWeight: "500", width: "100%", backgroundColor: "#fff", color: "#333" }}
+              >
                 <img src={G} alt="Google" style={iconStyle} />
                 {t.loginWithGoogle}
               </button>
 
-              <button style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "12px", padding: "12px", marginBottom: "12px", border: "none", borderRadius: "4px", cursor: "pointer", fontSize: "15px", fontWeight: "500", width: "100%", backgroundColor: "#1877F2", color: "white" }}>
+              <button 
+                onClick={handleFacebookLogin}
+                style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "12px", padding: "12px", marginBottom: "12px", border: "none", borderRadius: "4px", cursor: "pointer", fontSize: "15px", fontWeight: "500", width: "100%", backgroundColor: "#1877F2", color: "white" }}
+              >
                 <img src={FB} alt="Facebook" style={iconStyle} />
                 {t.loginWithFacebook}
               </button>
 
-              <button style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "12px", padding: "12px", marginBottom: "12px", border: "none", borderRadius: "4px", cursor: "pointer", fontSize: "15px", fontWeight: "500", width: "100%", backgroundColor: "#000", color: "white" }}>
+              <button 
+                onClick={handleAppleLogin}
+                style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "12px", padding: "12px", marginBottom: "12px", border: "none", borderRadius: "4px", cursor: "pointer", fontSize: "15px", fontWeight: "500", width: "100%", backgroundColor: "#000", color: "white" }}
+              >
                 <img src={A} alt="Apple" style={{ ...iconStyle, filter: "invert(1)" }} />
                 {t.loginWithApple}
               </button>

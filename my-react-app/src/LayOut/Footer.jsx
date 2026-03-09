@@ -1,35 +1,28 @@
 import React from "react";
 import { useLanguage } from "../context/LanguageContext";
-import { 
-  FaCcVisa, 
-  FaCcMastercard, 
-  FaPaypal, 
-  FaGooglePay, 
-  FaApplePay,
-  FaCcAmex,
-  FaCcDinersClub,
-  FaCcDiscover,
-  FaCcJcb
-} from "react-icons/fa";
-import { SiAlipay, SiWechat } from "react-icons/si"; // Bỏ SiUnionpay
 import { useLocation } from "react-router-dom";
+import Visa from "../Picture/Visa.png";
+import GPay from "../Picture/GPay.png";
+import JCB from "../Picture/JCB.png";
+import Plus from "../Picture/Plus.png";
+import ApplePay from "../Picture/ApplePay.png";
+import Google from "../Picture/Google.png";
 
 const Footer = ({ sidebarCollapsed }) => {
   const { t } = useLanguage();
   const location = useLocation();
   const isAuthPage = location.pathname === "/auth";
 
-  // Tính toán marginLeft dựa trên trạng thái sidebar
-  const sidebarWidth = !isAuthPage ? (sidebarCollapsed ? "80px" : "220px") : "0";
-  
   return (
     <footer style={{
-      backgroundColor: "#f8f9fa",
-      borderTop: "1px solid #e9ecef",
-      padding: "48px 0 24px 0",
-      marginTop: "60px",
-      width: "100%",
-      boxSizing: "border-box",
+    backgroundColor: "#f8f9fa",
+    borderTop: "1px solid #e9ecef",
+    padding: "48px 0 24px 0",
+    marginTop: "60px",
+    width: "100%",
+    boxSizing: "border-box",
+    transition: "all 0.3s ease", 
+
     }}>
       <div style={{
         maxWidth: "1200px",
@@ -38,7 +31,7 @@ const Footer = ({ sidebarCollapsed }) => {
         padding: "0 24px",
         boxSizing: "border-box",
       }}>
-        {/* Main Footer Grid */}
+       
         <div style={{
           display: "grid",
           gridTemplateColumns: "repeat(4, 1fr)",
@@ -46,7 +39,7 @@ const Footer = ({ sidebarCollapsed }) => {
           marginBottom: "40px",
           width: "100%",
         }}>
-          {/* Column 1: Contact Us */}
+         
           <div style={{ width: "100%" }}>
             <h4 style={{
               fontSize: "16px",
@@ -104,7 +97,7 @@ const Footer = ({ sidebarCollapsed }) => {
             </ul>
           </div>
 
-          {/* Column 2: CÁC DỊCH VỤ KHÁC */}
+          
           <div style={{ width: "100%" }}>
             <h4 style={{
               fontSize: "16px",
@@ -190,7 +183,7 @@ const Footer = ({ sidebarCollapsed }) => {
             </ul>
           </div>
 
-          {/* Column 3: PHƯƠNG THỨC THANH TOÁN */}
+          
           <div style={{ width: "100%" }}>
             <h4 style={{
               fontSize: "16px",
@@ -207,23 +200,36 @@ const Footer = ({ sidebarCollapsed }) => {
               gridTemplateColumns: "repeat(2, 1fr)",
               gap: "12px",
             }}>
-              <span style={{ fontSize: "14px", color: "#666" }}>VISA</span>
-              <span style={{ fontSize: "14px", color: "#666" }}>AMERICAN EXPRESS</span>
-              <span style={{ fontSize: "14px", color: "#666" }}>MASTERCARD</span>
-              <span style={{ fontSize: "14px", color: "#666" }}>JCB</span>
-              <span style={{ fontSize: "14px", color: "#666" }}>PLUS</span>
-              <span style={{ fontSize: "14px", color: "#666" }}>Diners Club</span>
-              <span style={{ fontSize: "14px", color: "#666" }}>Discover</span>
-              <span style={{ fontSize: "14px", color: "#666" }}>UnionPay</span>
-              <span style={{ fontSize: "14px", color: "#666" }}>Alipay</span>
-              <span style={{ fontSize: "14px", color: "#666" }}>WeChat Pay</span>
-              <span style={{ fontSize: "14px", color: "#666" }}>Apple Pay</span>
-              <span style={{ fontSize: "14px", color: "#666" }}>Google Pay</span>
-              <span style={{ fontSize: "14px", color: "#666" }}>DatxeVisor</span>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <img src={Visa} alt="VISA" style={{ width: "40px", height: "auto" }} />
+              <span style={{ fontSize: "14px", color: "#666" }}></span>
+              </div>
+
+              <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <img src={JCB} alt="JCB" style={{ width: "50px", height: "auto" }} />
+              <span style={{ fontSize: "14px", color: "#666" }}></span>
+              </div>
+
+              <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <img src={Plus} alt="PLUS" style={{ width: "40px", height: "auto" }} />
+              <span style={{ fontSize: "14px", color: "#666" }}></span>
+              </div>              
+              
+              <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <img src={ApplePay} alt="Apple Pay" style={{ width: "50px", height: "auto" }} />
+              <span style={{ fontSize: "14px", color: "#666" }}></span>
+              </div>
+
+              <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <img src={GPay} alt="Google Pay" style={{ width: "50px", height: "auto" }} />
+              <span style={{ fontSize: "14px", color: "#666" }}></span>
+              </div>
+
+              
             </div>
           </div>
 
-          {/* Column 4: ĐỐI TÁC CỦA CHÚNG TÔI */}
+          
           <div style={{ width: "100%" }}>
             <h4 style={{
               fontSize: "16px",
@@ -240,19 +246,11 @@ const Footer = ({ sidebarCollapsed }) => {
               flexDirection: "column",
               gap: "12px",
             }}>
-              <span style={{ 
-                fontSize: "14px", 
-                fontWeight: "600", 
-                color: "#4285F4",
-                background: "#fff",
-                padding: "6px 16px",
-                borderRadius: "30px",
-                border: "2px solid #4285F4",
-                display: "inline-block",
-                width: "fit-content",
-              }}>
-                Google
-              </span>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <img src={Google} alt="Google " style={{ width: "90px", height: "auto" }} />
+              <span style={{ fontSize: "14px", color: "#666" }}></span>
+              </div>
+
               <span style={{ 
                 fontSize: "14px", 
                 fontWeight: "600", 
@@ -270,7 +268,7 @@ const Footer = ({ sidebarCollapsed }) => {
           </div>
         </div>
 
-        {/* Copyright */}
+        
         <div style={{
           borderTop: "1px solid #e0e0e0",
           paddingTop: "24px",
