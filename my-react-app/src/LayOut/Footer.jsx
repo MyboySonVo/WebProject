@@ -39,13 +39,7 @@ const Footer = ({ sidebarCollapsed }) => {
         boxSizing: "border-box",
       }}>
         {/* Main Footer Grid */}
-        <div style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(4, 1fr)",
-          gap: "40px",
-          marginBottom: "40px",
-          width: "100%",
-        }}>
+        <div className="footer-grid">
           {/* Column 1: Contact Us */}
           <div style={{ width: "100%" }}>
             <h4 style={{

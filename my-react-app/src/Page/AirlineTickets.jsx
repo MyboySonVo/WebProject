@@ -390,19 +390,13 @@ const AirlineTickets = () => {
      
       <Header setIsSidebarOpen={setIsSidebarOpen} />
       
-      <div style={{ display: "flex" }}>
-        
+      <div className="page-with-sidebar">
         <Sidebar isOpen={isSidebarOpen} />
-        
-        
-        <div style={{ 
-          flex: 1,
-          padding: "100px 24px 24px 24px",
-          marginLeft: isSidebarOpen ? "220px" : "0",
-          transition: "margin-left 0.3s",
-          backgroundColor: "#f8f9fa"
-        }}>
-          <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
+        <div
+          className={`page-main ${isSidebarOpen ? "with-sidebar" : ""}`}
+          style={{ backgroundColor: "#f8f9fa" }}
+        >
+          <div className="page-content-wrap" style={{ maxWidth: "1200px" }}>
             <h1
               style={{
                 fontSize: "32px",
@@ -423,15 +417,7 @@ const AirlineTickets = () => {
                 marginBottom: "24px",
               }}
             >
-              <form
-                onSubmit={handleSearch}
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
-                  gap: "16px",
-                  alignItems: "end",
-                }}
-              >
+              <form onSubmit={handleSearch} className="search-form-grid">
                 <div>
                   <label style={{ display: "block", marginBottom: 8, fontWeight: 500 }}>
                     {t.from} (VD: HAN)

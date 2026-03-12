@@ -2,9 +2,11 @@ package com.booking.api.service;
 
 import com.booking.api.entity.Provider;
 import com.booking.api.entity.Route;
+import com.booking.api.entity.Trip;
 import com.booking.api.entity.Vehicle;
 import com.booking.api.repository.ProviderRepository;
 import com.booking.api.repository.RouteRepository;
+import com.booking.api.repository.TripRepository;
 import com.booking.api.repository.VehicleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,7 @@ public class AdminService {
     private final RouteRepository routeRepository;
     private final VehicleRepository vehicleRepository;
     private final ProviderRepository providerRepository;
+    private final TripRepository tripRepository;
 
     // ==================== ROUTE ====================
 
@@ -114,5 +117,60 @@ public class AdminService {
             throw new IllegalArgumentException("Không tìm thấy phương tiện với ID: " + id);
         }
         vehicleRepository.deleteById(id);
+    }
+
+    // ==================== TRIP ====================
+
+    @Transactional(readOnly = true)
+    public List<Trip> getAllTrips() {
+        return tripRepository.findAll();
+    }
+
+    @Transactional
+    public Trip createTrip(Trip trip) {
+        return tripRepository.save(trip);
+    }
+
+    @Transactional
+    public Trip updateTrip(Long id, Trip tripData) {
+        Trip trip = tripRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy chuyến đi với ID: " + id));
+
+        if (tripData.getRoute() != null) {
+            trip.setRoute(tripData.getRoute());
+        }
+        if (tripData.getVehicle() != null) {
+            trip.setVehicle(tripData.getVehicle());
+        }
+        if (tripData.getDepartureTime() != null) {
+            trip.setDepartureTime(tripData.getDepartureTime());
+        }
+        if (tripData.getArrivalTime() != null) {
+            trip.setArrivalTime(tripData.getArrivalTime());
+        }
+        if (tripData.getPrice() != null) {
+            trip.setPrice(tripData.getPrice());
+        }
+        if (tripData.getStatus() != null) {
+            trip.setStatus(tripData.getStatus());
+        }
+
+        return tripRepository.save(trip);
+    }
+
+    @Transactional
+    public Trip updateTripPrice(Long id, Double price) {
+        Trip trip = tripRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy chuyến đi với ID: " + id));
+        trip.setPrice(price);
+        return tripRepository.save(trip);
+    }
+
+    @Transactional
+    public void deleteTrip(Long id) {
+        if (!tripRepository.existsById(id)) {
+            throw new IllegalArgumentException("Không tìm thấy chuyến đi với ID: " + id);
+        }
+        tripRepository.deleteById(id);
     }
 }

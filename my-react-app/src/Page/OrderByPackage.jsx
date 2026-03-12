@@ -13,19 +13,13 @@ const OrderByPackage = () => {
       <Header setIsSidebarOpen={setIsSidebarOpen} />
       
       
-      <div style={{ display: "flex" }}>
-      
+      <div className="page-with-sidebar">
         <Sidebar isOpen={isSidebarOpen} />
-        
-        
-        <div style={{ 
-          flex: 1,
-          padding: "100px 24px 24px 24px",
-          marginLeft: isSidebarOpen ? "220px" : "0",
-          transition: "margin-left 0.3s",
-          backgroundColor: "#f8f9fa"
-        }}>
-          <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
+        <div
+          className={`page-main ${isSidebarOpen ? "with-sidebar" : ""}`}
+          style={{ backgroundColor: "#f8f9fa" }}
+        >
+          <div className="page-content-wrap" style={{ maxWidth: "1200px" }}>
             <h1 style={{ 
               fontSize: "32px", 
               fontWeight: "700", 

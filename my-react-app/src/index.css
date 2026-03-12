@@ -1,0 +1,177 @@
+/* === Reset & base === */
+*, *::before, *::after { box-sizing: border-box; }
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+}
+body {
+  margin: 0;
+  min-height: 100vh;
+  overflow-x: hidden;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  line-height: 1.5;
+  color: #333;
+}
+
+/* === Biến layout (dùng cho margin/padding responsive) === */
+:root {
+  --header-height: 70px;
+  --sidebar-width: 220px;
+  --content-max-width: 1200px;
+  --gap-unit: clamp(12px, 2vw, 24px);
+  --page-padding: clamp(16px, 4vw, 40px);
+}
+
+/* === Header responsive === */
+.app-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 20px;
+  padding: 0 var(--gap-unit);
+}
+.app-header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.app-header-search {
+  flex: 0 1 300px;
+  min-width: 140px;
+  max-width: 300px;
+}
+.app-header-search input {
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 1rem;
+}
+.app-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+@media (max-width: 900px) {
+  .app-header-search { display: none; }
+}
+@media (max-width: 600px) {
+  .app-header { padding: 0 12px; }
+  .app-header-actions { gap: 8px; }
+}
+
+/* === Main content (trang có sidebar) === */
+.page-with-sidebar {
+  display: flex;
+  margin-top: var(--header-height);
+  position: relative;
+  min-height: calc(100vh - var(--header-height));
+}
+.page-main {
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+  padding: var(--page-padding);
+  transition: margin-left 0.3s;
+}
+.page-main.with-sidebar { margin-left: var(--sidebar-width); }
+@media (max-width: 768px) {
+  .page-main.with-sidebar { margin-left: 0; }
+}
+
+/* === Nội dung trang con (Airline, Bus, Train, Package) === */
+.page-content-wrap {
+  padding: clamp(80px, 10vh, 100px) var(--gap-unit) var(--gap-unit);
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* === Card booking (BookingTabs) === */
+.booking-card {
+  background: #fff;
+  border-radius: 20px;
+  padding: clamp(16px, 3vw, 30px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  width: 100%;
+  max-width: 100%;
+}
+
+/* === Footer grid responsive === */
+.footer-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(24px, 4vw, 40px);
+  margin-bottom: 40px;
+  width: 100%;
+}
+@media (max-width: 992px) {
+  .footer-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 576px) {
+  .footer-grid { grid-template-columns: 1fr; gap: 32px; }
+}
+
+/* === Bảng admin / danh sách: tránh tràn khi thu nhỏ === */
+.table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.table-wrap table {
+  min-width: 640px;
+  width: 100%;
+}
+
+/* Form grid admin: 4 cột -> 2 -> 1 khi thu nhỏ */
+.admin-form-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1.2fr 1fr 1fr;
+  gap: 12px;
+}
+@media (max-width: 900px) {
+  .admin-form-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 500px) {
+  .admin-form-grid { grid-template-columns: 1fr; }
+}
+.admin-form-row-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+}
+@media (max-width: 500px) {
+  .admin-form-row-3 { grid-template-columns: 1fr; }
+}
+
+/* Form tìm chuyến: 4 cột -> 2 -> 1 */
+.search-form-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  align-items: end;
+}
+@media (max-width: 900px) {
+  .search-form-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 480px) {
+  .search-form-grid { grid-template-columns: 1fr; }
+}
+
+/* === Form / container rộng cố định -> responsive === */
+.form-container-narrow {
+  width: 100%;
+  max-width: 500px;
+}
+.form-container-wide {
+  width: 100%;
+  max-width: 750px;
+}
+.city-selector-wrap {
+  width: 100%;
+  max-width: 700px;
+}
+
+/* === Ảnh / icon scale theo font === */
+img, svg { max-width: 100%; height: auto; vertical-align: middle; }

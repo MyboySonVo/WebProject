@@ -1,5 +1,6 @@
 package com.booking.api.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,6 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "phuong_tien")
+@JsonIgnoreProperties({"seats", "trips"})
 public class Vehicle {
 
     @Id

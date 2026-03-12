@@ -65,23 +65,21 @@ const Header = ({ setIsSidebarOpen }) => {
   return (
     <>
       <header
+        className="app-header"
         style={{
           position: "fixed",
           top: 0,
           left: 0,
           width: "100%",
-          height: "70px",
+          height: "var(--header-height)",
+          minHeight: "70px",
           background: "#fff",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          padding: "0 24px",
           boxShadow: "0 2px 10px rgba(0,0,0,0.08)",
           zIndex: 1000,
           color: "black",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+        <div className="app-header-left">
           <button
             onClick={() => setIsSidebarOpen((prev) => !prev)}
             style={{
@@ -109,20 +107,11 @@ const Header = ({ setIsSidebarOpen }) => {
           </h2>
         </div>
 
-        <input
-          placeholder={t.search}
-          style={{
-            width: "300px",
-            padding: "8px 12px",
-            borderRadius: "8px",
-            border: "1px solid #ddd",
-            backgroundColor: "white",
-            position: "relative",
-            right: "220px",
-          }}
-        />
+        <div className="app-header-search">
+          <input placeholder={t.search} />
+        </div>
 
-        <div style={{ display: "flex", alignItems: "center", gap: "16px", position: "relative", right: "50px" }}>
+        <div className="app-header-actions">
           <span style={{ display: "flex", alignItems: "center", gap: "4px", cursor: "pointer" }}>
             <IoIosPhonePortrait /> {t.app}
           </span>
@@ -321,6 +310,24 @@ const Header = ({ setIsSidebarOpen }) => {
               </div>
             )}
           </div>
+
+          {isAuthenticated && user?.role === "ROLE_ADMIN" && (
+            <button
+              onClick={() => navigate("/admin/trips")}
+              style={{
+                padding: "6px 12px",
+                borderRadius: "6px",
+                border: "1px solid #20c997",
+                background: "#e6fff5",
+                color: "#059669",
+                cursor: "pointer",
+                fontSize: "13px",
+                fontWeight: "600",
+              }}
+            >
+              Admin
+            </button>
+          )}
 
           {isAuthenticated ? (
             <>

@@ -20,15 +20,7 @@ const BookingTabs = () => {
   ];
 
   return (
-    <div
-      style={{
-        background: "#ffffff",
-        borderRadius: "20px",
-        padding: "30px",
-        boxShadow: "0 10px 30px rgba(0,0,0,0.08)",
-        color: "black"
-      }}
-    >
+    <div className="booking-card" style={{ color: "black" }}>
  
       <div
         style={{

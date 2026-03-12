@@ -13,6 +13,7 @@ spring:
       hibernate:
         format_sql: true
         dialect: org.hibernate.dialect.SQLServerDialect
+        use_nationalized_character_data: true
   
 server:
   port: 8080

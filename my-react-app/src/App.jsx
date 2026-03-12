@@ -10,6 +10,7 @@ import OrderByPackage from "./Page/OrderByPackage";
 import { LanguageProvider } from "./context/LanguageContext";
 import { AuthProvider } from "./context/AuthContext";
 import Footer from "./LayOut/Footer"; 
+import AdminTrips from "./Page/AdminTrips";
 
 function AppWrapper() {
   const location = useLocation();
@@ -27,6 +28,7 @@ function AppWrapper() {
         <Route path="/xe-khach" element={<BusTickets />} />
         <Route path="/dat-theo-goi" element={<OrderByPackage />} /> 
         <Route path="/auth" element={<Auth />} />
+        <Route path="/admin/trips" element={<AdminTrips />} />
       </Routes>
       {showFooter && <Footer />} {/* Thêm Footer */}
     </>

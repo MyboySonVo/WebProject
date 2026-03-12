@@ -2,6 +2,7 @@ package com.booking.api.controller;
 
 import com.booking.api.entity.Provider;
 import com.booking.api.entity.Route;
+import com.booking.api.entity.Trip;
 import com.booking.api.entity.Vehicle;
 import com.booking.api.service.AdminService;
 import lombok.RequiredArgsConstructor;
@@ -88,6 +89,34 @@ public class AdminController {
     @DeleteMapping("/vehicles/{id}")
     public ResponseEntity<Void> deleteVehicle(@PathVariable Long id) {
         adminService.deleteVehicle(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    // ==================== TRIP ====================
+
+    @GetMapping("/trips")
+    public ResponseEntity<List<Trip>> getAllTrips() {
+        return ResponseEntity.ok(adminService.getAllTrips());
+    }
+
+    @PostMapping("/trips")
+    public ResponseEntity<Trip> createTrip(@RequestBody Trip trip) {
+        return ResponseEntity.ok(adminService.createTrip(trip));
+    }
+
+    @PutMapping("/trips/{id}")
+    public ResponseEntity<Trip> updateTrip(@PathVariable Long id, @RequestBody Trip trip) {
+        return ResponseEntity.ok(adminService.updateTrip(id, trip));
+    }
+
+    @PutMapping("/trips/{id}/price")
+    public ResponseEntity<Trip> updateTripPrice(@PathVariable Long id, @RequestBody Double price) {
+        return ResponseEntity.ok(adminService.updateTripPrice(id, price));
+    }
+
+    @DeleteMapping("/trips/{id}")
+    public ResponseEntity<Void> deleteTrip(@PathVariable Long id) {
+        adminService.deleteTrip(id);
         return ResponseEntity.noContent().build();
     }
 }

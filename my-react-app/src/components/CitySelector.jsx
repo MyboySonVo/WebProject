@@ -76,7 +76,7 @@ const CitySelector = ({ isOpen, onClose, onSelect, type }) => {
       <div
         style={{
           width: "700px",
-          maxWidth: "90%",
+          maxWidth: "90vw",
           maxHeight: "80vh",
           backgroundColor: "#fff",
           borderRadius: "16px",

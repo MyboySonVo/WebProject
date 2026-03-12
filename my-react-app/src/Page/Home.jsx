@@ -12,20 +12,9 @@ const Home = () => {
       <Header setIsSidebarOpen={setIsSidebarOpen} />
 
       
-      <div style={{ display: "flex", marginTop: "70px", position: "relative" }}>
-        
+      <div className="page-with-sidebar">
         <Sidebar isOpen={isSidebarOpen} />
-
-        
-        <main
-          style={{
-            flex: 1,
-            padding: "40px",
-            marginLeft: isSidebarOpen ? "220px" : "0", 
-            transition: "margin-left 0.3s",
-            width: "100%",
-          }}
-        >
+        <main className={`page-main ${isSidebarOpen ? "with-sidebar" : ""}`}>
           <BookingTabs />
         </main>
       </div>

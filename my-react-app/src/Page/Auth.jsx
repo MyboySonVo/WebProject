@@ -272,6 +272,7 @@ const Auth = ({ isOpen, onClose }) => {
         style={{
           position: "relative",
           width: step === 1 ? "750px" : "500px",
+          maxWidth: "95vw",
           display: "flex",
           backgroundColor: "#fff",
           borderRadius: "12px",
