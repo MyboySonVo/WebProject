@@ -166,6 +166,29 @@ const translations = {
     adult: "Người lớn",
     child: "Trẻ em",
 
+  // User Menu
+  loggedInAs: "Đã đăng nhập với",
+  profile: "Thông tin cá nhân",
+  settings: "Cài đặt",
+  help: "Trợ giúp",
+  logout: "Đăng xuất",
+
+
+  // User Info
+  fullName: "HỌ VÀ TÊN",
+  email: "EMAIL",
+  phone: "SỐ ĐIỆN THOẠI",
+  birthDate: "NGÀY SINH",
+  gender: "GIỚI TÍNH",
+  address: "ĐỊA CHỈ",
+  editProfile: "Chỉnh sửa thông tin",
+  notLoggedIn: "Vui lòng đăng nhập để xem thông tin",
+  notUpdated: "Chưa cập nhật",
+
+
+
+
+
   
   
   },
@@ -335,12 +358,29 @@ const translations = {
     rooms: "rooms",
     adult: "Adults",
     child: "Children",
+
+  // User Menu
+  loggedInAs: "Logged in as",
+  profile: "Profile",
+  settings: "Settings",
+  help: "Help",
+  logout: "Logout",
+
+ // User Info
+  fullName: "FULL NAME",
+  email: "EMAIL",
+  phone: "PHONE",
+  birthDate: "BIRTH DATE",
+  gender: "GENDER",
+  address: "ADDRESS",
+  editProfile: "Edit Profile",
+  notLoggedIn: "Please login to view information",
+  notUpdated: "Not updated",
   
 
 },
 
 
-   
 
   ja: {
     // Header
@@ -505,6 +545,26 @@ const translations = {
     rooms: "部屋",
     adult: "大人",
     child: "子供",
+
+
+    // User Menu
+  loggedInAs: "ログイン中",
+  profile: "プロフィール",
+  settings: "設定",
+  help: "ヘルプ",
+  logout: "ログアウト",
+
+
+   // User Info
+  fullName: "氏名",
+  email: "メールアドレス",
+  phone: "電話番号",
+  birthDate: "生年月日",
+  gender: "性別",
+  address: "住所",
+  editProfile: "プロフィール編集",
+  notLoggedIn: "情報を表示するにはログインしてください",
+  notUpdated: "未更新",
 
   },
 
@@ -675,6 +735,27 @@ const translations = {
     rooms: "房間",
     adult: "成人",
     child: "兒童",
+
+  // User Menu
+  loggedInAs: "登入為",
+  profile: "個人資料",
+  settings: "設定",
+  help: "幫助",
+  logout: "登出",
+
+
+   // User Info
+  fullName: "姓名",
+  email: "電子郵件",
+  phone: "電話",
+  birthDate: "生日",
+  gender: "性別",
+  address: "地址",
+  editProfile: "編輯資料",
+  notLoggedIn: "請登入查看資訊",
+  notUpdated: "未更新",
+
+  
   }
 
   

@@ -35,7 +35,13 @@ const Header = ({ setIsSidebarOpen }) => {
     zh: "+84 43 1234 5678"
   };
 
- 
+  const supportText = {
+    vi: "Tư vấn 24/7",
+    en: "24/7 Support",
+    ja: "24時間サポート",
+    zh: "24小時客服"
+  };
+
   useEffect(() => {
     const savedEmail = localStorage.getItem("userEmail");
     if (savedEmail) {
@@ -45,7 +51,6 @@ const Header = ({ setIsSidebarOpen }) => {
 
   const handleLogoClick = () => navigate("/");
 
-  
   useEffect(() => {
     const langWithFlag = languages.find(lang => lang.code === currentLanguage.code);
     if (langWithFlag && currentLanguage.flag !== langWithFlag.flag) {
@@ -122,7 +127,7 @@ const Header = ({ setIsSidebarOpen }) => {
           color: "black",
         }}
       >
-        
+        {/* Logo + Sidebar */}
         <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
           <button
             onClick={() => setIsSidebarOpen(prev => !prev)}
@@ -140,7 +145,7 @@ const Header = ({ setIsSidebarOpen }) => {
           </h2>
         </div>
 
-      
+        {/* Search */}
         <input
           placeholder={t.search}
           style={{
@@ -154,13 +159,13 @@ const Header = ({ setIsSidebarOpen }) => {
           }}
         />
 
-        
+        {/* Right section: app, language, support, auth */}
         <div style={{ display: "flex", alignItems: "center", gap: "16px", position: "relative", right: "50px" }}>
           <span style={{ display: "flex", alignItems: "center", gap: "4px", cursor: "pointer" }}>
             <IoIosPhonePortrait /> {t.app}
           </span>
 
-       
+          {/* Language selector */}
           <div className="language-selector" style={{ position: "relative" }}>
             <span 
               style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer", padding: "4px 12px", borderRadius: "20px", backgroundColor: isLanguageOpen ? "#f0f0f0" : "transparent", border: "1px solid #e0e0e0" }}
@@ -188,6 +193,7 @@ const Header = ({ setIsSidebarOpen }) => {
             )}
           </div>
 
+          {/* Support */}
           <div className="cskh-container" style={{ position: "relative" }}>
             <span style={{ display: "flex", alignItems: "center", gap: "4px", cursor: "pointer", padding: "4px 8px", borderRadius: "4px", backgroundColor: showPhone ? "#f0f0f0" : "transparent" }} onClick={(e) => { e.stopPropagation(); setShowPhone(!showPhone); setIsLanguageOpen(false); setIsUserMenuOpen(false); }}>
               <MdOutlinePhone /> {t.support}
@@ -198,13 +204,13 @@ const Header = ({ setIsSidebarOpen }) => {
                   <MdOutlinePhone style={{ fontSize: "18px" }} /> {phoneNumbers[currentLanguage.code]}
                 </div>
                 <div style={{ fontSize: "12px", color: "#666", borderTop: "1px solid #eee", paddingTop: "8px", marginTop: "8px" }}>
-                  {t.support === "CSKH" ? "Tư vấn 24/7" : t.support === "Support" ? "24/7 Support" : t.support === "サポート" ? "24時間サポート" : "24小時客服"}
+                  {supportText[currentLanguage.code]}
                 </div>
               </div>
             )}
           </div>
 
-         
+          {/* Auth button / User menu */}
           <div className="user-menu" style={{ display: "flex", alignItems: "center", gap: "8px", position: "relative" }}>
             {!userEmail ? (
               <button
@@ -236,7 +242,7 @@ const Header = ({ setIsSidebarOpen }) => {
                   <IoChevronDown style={{ fontSize: "14px", color: "#666", transform: isUserMenuOpen ? "rotate(180deg)" : "rotate(0)", transition: "transform 0.3s" }} />
                 </div>
 
-               
+                {/* User Dropdown Menu */}
                 {isUserMenuOpen && (
                   <div
                     style={{
@@ -253,7 +259,7 @@ const Header = ({ setIsSidebarOpen }) => {
                     }}
                   >
                     <div style={{ padding: "12px", borderBottom: "1px solid #f0f0f0", marginBottom: "4px" }}>
-                      <div style={{ fontSize: "12px", color: "#888", marginBottom: "2px" }}>Đã đăng nhập với</div>
+                      <div style={{ fontSize: "12px", color: "#888", marginBottom: "2px" }}>{t.loggedInAs || "Đã đăng nhập với"}</div>
                       <div style={{ fontSize: "14px", fontWeight: "600", color: "#333", wordBreak: "break-all" }}>{userEmail}</div>
                     </div>
 
@@ -278,7 +284,7 @@ const Header = ({ setIsSidebarOpen }) => {
                       onMouseOut={(e) => e.target.style.backgroundColor = "transparent"}
                     >
                       <FiUser style={{ fontSize: "16px", color: "#666" }} />
-                      Thông tin cá nhân
+                      {t.profile || "Thông tin cá nhân"}
                     </button>
 
                     <button
@@ -302,7 +308,7 @@ const Header = ({ setIsSidebarOpen }) => {
                       onMouseOut={(e) => e.target.style.backgroundColor = "transparent"}
                     >
                       <FiSettings style={{ fontSize: "16px", color: "#666" }} />
-                      Cài đặt
+                      {t.settings || "Cài đặt"}
                     </button>
 
                     <button
@@ -326,7 +332,7 @@ const Header = ({ setIsSidebarOpen }) => {
                       onMouseOut={(e) => e.target.style.backgroundColor = "transparent"}
                     >
                       <FiHelpCircle style={{ fontSize: "16px", color: "#666" }} />
-                      Trợ giúp
+                      {t.help || "Trợ giúp"}
                     </button>
 
                     <div style={{ borderTop: "1px solid #f0f0f0", margin: "4px 0" }}></div>
@@ -352,7 +358,7 @@ const Header = ({ setIsSidebarOpen }) => {
                       onMouseOut={(e) => e.target.style.backgroundColor = "transparent"}
                     >
                       <FiLogOut style={{ fontSize: "16px" }} />
-                      Đăng xuất
+                      {t.logout || "Đăng xuất"}
                     </button>
                   </div>
                 )}
@@ -362,7 +368,7 @@ const Header = ({ setIsSidebarOpen }) => {
         </div>
       </header>
 
-      
+      {/* Auth modal */}
       <Auth 
         isOpen={isAuthOpen} 
         onClose={() => setIsAuthOpen(false)} 
