@@ -1,0 +1,281 @@
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import Sidebar from "../components/Sidebar";
+
+const API = "http://localhost:8080";
+
+const MEMBERSHIP_CONFIG = {
+  "Đồng":     { color: "#b45309", bg: "#fef3c7", icon: "🥉", next: "Bạc",      nextPoints: 100 },
+  "Bạc":      { color: "#6b7280", bg: "#f3f4f6", icon: "🥈", next: "Vàng",     nextPoints: 500 },
+  "Vàng":     { color: "#d97706", bg: "#fff7ed", icon: "🥇", next: "Kim Cương", nextPoints: 2000 },
+  "Kim Cương":{ color: "#7c3aed", bg: "#f5f3ff", icon: "💎", next: null,        nextPoints: null },
+};
+
+const AccountPage = () => {
+  const [activeTab, setActiveTab] = useState("profile");
+  const [profile, setProfile] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  
+  const [fullName, setFullName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [profileMsg, setProfileMsg] = useState(null);
+  const [profileLoading, setProfileLoading] = useState(false);
+
+ 
+  const [oldPwd, setOldPwd] = useState("");
+  const [newPwd, setNewPwd] = useState("");
+  const [confirmPwd, setConfirmPwd] = useState("");
+  const [pwdMsg, setPwdMsg] = useState(null);
+  const [pwdLoading, setPwdLoading] = useState(false);
+
+  const token = localStorage.getItem("authToken");
+
+  const fetchProfile = async () => {
+    try {
+      setLoading(true);
+      const res = await axios.get(`${API}/api/users/me`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setProfile(res.data);
+      setFullName(res.data.fullName || "");
+      setPhone(res.data.phone || "");
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => { fetchProfile(); }, []);
+
+  const handleUpdateProfile = async (e) => {
+    e.preventDefault();
+    setProfileLoading(true);
+    setProfileMsg(null);
+    try {
+      await axios.put(`${API}/api/users/me`, { fullName, phone }, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setProfileMsg({ type: "success", text: "Cập nhật thông tin thành công!" });
+      fetchProfile();
+    } catch (err) {
+      setProfileMsg({ type: "error", text: err.response?.data?.message || "Cập nhật thất bại." });
+    } finally {
+      setProfileLoading(false);
+    }
+  };
+
+  const handleChangePassword = async (e) => {
+    e.preventDefault();
+    if (newPwd !== confirmPwd) {
+      setPwdMsg({ type: "error", text: "Mật khẩu xác nhận không khớp." });
+      return;
+    }
+    if (newPwd.length < 8) {
+      setPwdMsg({ type: "error", text: "Mật khẩu mới phải có ít nhất 8 ký tự." });
+      return;
+    }
+    setPwdLoading(true);
+    setPwdMsg(null);
+    try {
+      await axios.put(`${API}/api/users/me/password`, { oldPassword: oldPwd, newPassword: newPwd }, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setPwdMsg({ type: "success", text: "Đổi mật khẩu thành công!" });
+      setOldPwd(""); setNewPwd(""); setConfirmPwd("");
+    } catch (err) {
+      setPwdMsg({ type: "error", text: err.response?.data?.message || "Đổi mật khẩu thất bại." });
+    } finally {
+      setPwdLoading(false);
+    }
+  };
+
+  const tabStyle = (tab) => ({
+    padding: "10px 20px",
+    border: "none",
+    borderBottom: activeTab === tab ? "3px solid #4f46e5" : "3px solid transparent",
+    background: "none",
+    fontWeight: activeTab === tab ? 700 : 500,
+    color: activeTab === tab ? "#4f46e5" : "#6b7280",
+    cursor: "pointer",
+    fontSize: 15,
+    transition: "0.2s",
+  });
+
+  const inputStyle = {
+    width: "100%", padding: "12px 14px", borderRadius: 8, border: "1.5px solid #d1d5db",
+    fontSize: 15, outline: "none", boxSizing: "border-box",
+  };
+
+  const labelStyle = { display: "block", fontWeight: 600, fontSize: 14, color: "#374151", marginBottom: 6 };
+
+  const msgBox = (msg) => msg && (
+    <div style={{
+      padding: "12px 16px", borderRadius: 8, marginBottom: 16, fontSize: 14, fontWeight: 600,
+      background: msg.type === "success" ? "#dcfce7" : "#fee2e2",
+      color: msg.type === "success" ? "#16a34a" : "#dc2626",
+      border: `1px solid ${msg.type === "success" ? "#bbf7d0" : "#fecaca"}`,
+    }}>
+      {msg.type === "success" ? "✅" : "⚠️ "}{msg.text}
+    </div>
+  );
+
+  const renderMembership = () => {
+    if (!profile) return null;
+    const points = profile.points || 0;
+    const level = profile.membershipLevel || "Đồng";
+    const cfg = MEMBERSHIP_CONFIG[level] || MEMBERSHIP_CONFIG["Đồng"];
+    const nextPoints = cfg.nextPoints;
+    const prevPoints = level === "Đồng" ? 0 : level === "Bạc" ? 100 : level === "Vàng" ? 500 : 2000;
+    const progress = nextPoints ? Math.min(100, ((points - prevPoints) / (nextPoints - prevPoints)) * 100) : 100;
+
+    const tiers = [
+      { name: "Đồng", icon: "🥉", min: 0, discount: "0%", color: "#b45309" },
+      { name: "Bạc", icon: "🥈", min: 100, discount: "5%", color: "#6b7280" },
+      { name: "Vàng", icon: "🥇", min: 500, discount: "10%", color: "#d97706" },
+      { name: "Kim Cương", icon: "💎", min: 2000, discount: "15%", color: "#7c3aed" },
+    ];
+
+    return (
+      <div>
+        {/* Current Level Card */}
+        <div style={{ background: cfg.bg, border: `2px solid ${cfg.color}30`, borderRadius: 16, padding: 24, marginBottom: 24, textAlign: "center" }}>
+          <div style={{ fontSize: 56 }}>{cfg.icon}</div>
+          <h2 style={{ fontSize: 22, fontWeight: 800, color: cfg.color, margin: "8px 0 4px" }}>Hạng {level}</h2>
+          <p style={{ fontSize: 15, color: "#555", marginBottom: 16 }}>
+            Bạn có <strong style={{ color: "#4f46e5", fontSize: 18 }}>{points.toLocaleString()}</strong> điểm
+          </p>
+          {cfg.next && (
+            <>
+              <div style={{ fontSize: 13, color: "#6b7280", marginBottom: 8 }}>
+                Cần thêm <strong>{(nextPoints - points).toLocaleString()}</strong> điểm để lên hạng <strong>{cfg.next} {MEMBERSHIP_CONFIG[cfg.next]?.icon}</strong>
+              </div>
+              <div style={{ background: "#e5e7eb", borderRadius: 99, height: 10, overflow: "hidden" }}>
+                <div style={{ width: `${progress}%`, background: `linear-gradient(90deg, ${cfg.color}, ${cfg.color}cc)`, height: "100%", borderRadius: 99, transition: "width 0.5s" }} />
+              </div>
+            </>
+          )}
+          {!cfg.next && <div style={{ color: "#7c3aed", fontWeight: 700, fontSize: 15 }}>🎉 Bạn đã đạt hạng cao nhất!</div>}
+        </div>
+
+        {/* Tier Table */}
+        <h3 style={{ fontWeight: 700, color: "#111827", marginBottom: 12 }}>Bảng hạng thành viên</h3>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12 }}>
+          {tiers.map(tier => (
+            <div key={tier.name} style={{
+              padding: "16px 12px", borderRadius: 12, textAlign: "center",
+              background: tier.name === level ? `${tier.color}15` : "#f9fafb",
+              border: tier.name === level ? `2px solid ${tier.color}` : "2px solid #e5e7eb",
+              transition: "0.2s",
+            }}>
+              <div style={{ fontSize: 28 }}>{tier.icon}</div>
+              <div style={{ fontWeight: 700, fontSize: 13, color: tier.color, marginTop: 4 }}>{tier.name}</div>
+              <div style={{ fontSize: 11, color: "#6b7280" }}>≥ {tier.min.toLocaleString()} điểm</div>
+              <div style={{ fontWeight: 700, fontSize: 14, color: "#16a34a", marginTop: 4 }}>Giảm {tier.discount}</div>
+            </div>
+          ))}
+        </div>
+
+        <div style={{ marginTop: 20, padding: 16, background: "#eff6ff", borderRadius: 12, fontSize: 13, color: "#1e40af" }}>
+          💡 <strong>Cách tích điểm:</strong> Mỗi <strong>10,000đ</strong> bạn chi cho vé = <strong>1 điểm</strong>. Điểm được cộng tự động sau khi chuyến đi hoàn thành.
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <div style={{ display: "flex", minHeight: "100vh", backgroundColor: "#f3f4f6" }}>
+      <Sidebar />
+      <div style={{ flex: 1, display: "flex", flexDirection: "column", paddingTop: 70 }}>
+        <div style={{ maxWidth: 680, margin: "40px auto", width: "100%", padding: "0 20px" }}>
+          <h1 style={{ fontSize: 26, fontWeight: 800, color: "#111827", marginBottom: 24 }}>Quản lý tài khoản</h1>
+
+          {/* Tabs */}
+          <div style={{ display: "flex", borderBottom: "1px solid #e5e7eb", marginBottom: 24, background: "#fff", borderRadius: "12px 12px 0 0", overflow: "hidden" }}>
+            <button style={tabStyle("profile")} onClick={() => setActiveTab("profile")}>👤 Thông tin cá nhân</button>
+            <button style={tabStyle("password")} onClick={() => setActiveTab("password")}>🔒 Đổi mật khẩu</button>
+            <button style={tabStyle("membership")} onClick={() => setActiveTab("membership")}>⭐ Hạng thành viên</button>
+          </div>
+
+          {loading ? (
+            <div style={{ textAlign: "center", padding: 60, color: "#6b7280" }}>Đang tải...</div>
+          ) : (
+            <div style={{ background: "#fff", borderRadius: "0 0 12px 12px", padding: 28, boxShadow: "0 4px 12px rgba(0,0,0,0.06)" }}>
+
+              {/* TAB: PROFILE */}
+              {activeTab === "profile" && (
+                <form onSubmit={handleUpdateProfile}>
+                  <h2 style={{ fontWeight: 800, fontSize: 17, marginBottom: 20, color: "#111827" }}>Thông tin cá nhân</h2>
+                  {msgBox(profileMsg)}
+
+                  <div style={{ marginBottom: 18 }}>
+                    <label style={labelStyle}>Email</label>
+                    <input style={{ ...inputStyle, background: "#f3f4f6", color: "#6b7280" }} value={profile?.email || ""} readOnly />
+                    <div style={{ fontSize: 12, color: "#9ca3af", marginTop: 4 }}>Email không thể thay đổi</div>
+                  </div>
+
+                  <div style={{ marginBottom: 18 }}>
+                    <label style={labelStyle}>Họ và tên <span style={{ color: "#ef4444" }}>*</span></label>
+                    <input style={inputStyle} value={fullName} onChange={e => setFullName(e.target.value)} placeholder="Nhập họ và tên" required />
+                  </div>
+
+                  <div style={{ marginBottom: 24 }}>
+                    <label style={labelStyle}>Số điện thoại</label>
+                    <input style={inputStyle} value={phone} onChange={e => setPhone(e.target.value)} placeholder="0xxxxxxxxx" />
+                  </div>
+
+                  <button disabled={profileLoading} type="submit" style={{
+                    width: "100%", padding: "13px", borderRadius: 10, border: "none",
+                    background: profileLoading ? "#a5b4fc" : "#4f46e5", color: "#fff",
+                    fontWeight: 700, fontSize: 15, cursor: profileLoading ? "not-allowed" : "pointer",
+                  }}>
+                    {profileLoading ? "Đang lưu..." : "Lưu thay đổi"}
+                  </button>
+                </form>
+              )}
+
+              {/* TAB: PASSWORD */}
+              {activeTab === "password" && (
+                <form onSubmit={handleChangePassword}>
+                  <h2 style={{ fontWeight: 800, fontSize: 17, marginBottom: 20, color: "#111827" }}>
+                    {profile?.hasPassword === false ? "Tạo mật khẩu mới" : "Đổi mật khẩu"}
+                  </h2>
+                  {msgBox(pwdMsg)}
+
+                  {[
+                    ...(profile?.hasPassword !== false ? [{ label: "Mật khẩu hiện tại", val: oldPwd, set: setOldPwd, ph: "Nhập mật khẩu hiện tại" }] : []),
+                    { label: "Mật khẩu mới", val: newPwd, set: setNewPwd, ph: "Tối thiểu 8 ký tự" },
+                    { label: "Xác nhận mật khẩu mới", val: confirmPwd, set: setConfirmPwd, ph: "Nhập lại mật khẩu mới" },
+                  ].map(({ label, val, set, ph }) => (
+                    <div key={label} style={{ marginBottom: 18 }}>
+                      <label style={labelStyle}>{label} <span style={{ color: "#ef4444" }}>*</span></label>
+                      <input type="password" style={inputStyle} value={val} onChange={e => set(e.target.value)} placeholder={ph} required />
+                    </div>
+                  ))}
+
+                  <div style={{ fontSize: 13, color: "#6b7280", background: "#f0f9ff", padding: "10px 14px", borderRadius: 8, marginBottom: 20 }}>
+                    🔒 Sau khi đổi mật khẩu, bạn sẽ cần đăng nhập lại ở lần tiếp theo.
+                  </div>
+
+                  <button disabled={pwdLoading} type="submit" style={{
+                    width: "100%", padding: "13px", borderRadius: 10, border: "none",
+                    background: pwdLoading ? "#a5b4fc" : "#4f46e5", color: "#fff",
+                    fontWeight: 700, fontSize: 15, cursor: pwdLoading ? "not-allowed" : "pointer",
+                  }}>
+                    {pwdLoading ? "Đang xử lý..." : (profile?.hasPassword === false ? "Tạo mật khẩu" : "Đổi mật khẩu")}
+                  </button>
+                </form>
+              )}
+
+              {/* TAB: MEMBERSHIP */}
+              {activeTab === "membership" && renderMembership()}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default AccountPage;

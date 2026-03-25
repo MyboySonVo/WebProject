@@ -1,12 +1,14 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useLanguage } from "../context/LanguageContext";
 import { IoIosSwap } from "react-icons/io";
 import { FaCalendarAlt, FaUser, FaSearch, FaPlus, FaPlane } from "react-icons/fa";
 import { MdFlightTakeoff, MdFlightLand } from "react-icons/md";
 import CitySelector from "./CitySelector";
+import { useNavigate } from "react-router-dom";
 
 const FlightSearch = () => {
   const { t } = useLanguage();
+  const navigate = useNavigate();
   const [tripType, setTripType] = useState("roundtrip");
   
   // State cho roundtrip và oneway
@@ -35,6 +37,12 @@ const FlightSearch = () => {
   const [showCitySelector, setShowCitySelector] = useState(false);
   const [citySelectorType, setCitySelectorType] = useState(null);
   const [currentFlightId, setCurrentFlightId] = useState(null);
+  const [cheapOnly, setCheapOnly] = useState(false);
+
+  const totalPassengers = useMemo(
+    () => passengers.adult + passengers.child + passengers.infant,
+    [passengers],
+  );
 
   const tripTypes = [
     { id: "roundtrip", label: t.roundTrip },
@@ -51,20 +59,24 @@ const FlightSearch = () => {
 
   const handleSearch = () => {
     if (tripType === "multi") {
-      console.log("Search multi-city flights:", { 
-        flights: multiCityFlights.filter(f => f.from && f.to && f.departDate), 
-        passengers 
-      });
-    } else {
-      console.log("Search flights:", { 
-        tripType, 
-        from: fromCity, 
-        to: toCity, 
-        departDate, 
-        returnDate, 
-        passengers 
-      });
+      // Multi-city chưa được hỗ trợ trên trang lịch giá
+      return;
     }
+
+    if (!fromCity || !toCity || !departDate) {
+      // Có thể hiển thị toast trong tương lai, tạm thời chỉ bỏ qua
+      return;
+    }
+
+    const params = new URLSearchParams({
+      from: fromCity.code,
+      to: toCity.code,
+      date: departDate,
+      passengers: String(totalPassengers || 1),
+      mode: cheapOnly ? "calendar" : "search",
+    });
+
+    navigate(`/ve-may-bay?${params.toString()}`);
   };
 
   const handleCitySelect = (city) => {
@@ -834,15 +846,29 @@ const FlightSearch = () => {
         paddingTop: "20px",
         borderTop: "1px solid #e0e0e0",
       }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-          <input 
-            type="checkbox" 
-            id="flightHotel"
-            style={{ width: "16px", height: "16px", cursor: "pointer" }}
-          />
-          <label htmlFor="flightHotel" style={{ fontSize: "14px", color: "#666", cursor: "pointer" }}>
-            {t.flightHotel}
-          </label>
+        <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <input 
+              type="checkbox" 
+              id="flightHotel"
+              style={{ width: "16px", height: "16px", cursor: "pointer" }}
+            />
+            <label htmlFor="flightHotel" style={{ fontSize: "14px", color: "#666", cursor: "pointer" }}>
+              {t.flightHotel}
+            </label>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <input
+              type="checkbox"
+              id="cheapOnly"
+              checked={cheapOnly}
+              onChange={(e) => setCheapOnly(e.target.checked)}
+              style={{ width: "16px", height: "16px", cursor: "pointer" }}
+            />
+            <label htmlFor="cheapOnly" style={{ fontSize: "14px", color: "#666", cursor: "pointer" }}>
+              Tìm vé rẻ nhất
+            </label>
+          </div>
         </div>
 
         <button

@@ -1,4 +1,3 @@
-// src/components/CitySelector.jsx
 import React, { useState } from "react";
 import { useLanguage } from "../context/LanguageContext";
 import { IoClose, IoSearch } from "react-icons/io5";
@@ -8,7 +7,6 @@ const CitySelector = ({ isOpen, onClose, onSelect, type }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTab, setSelectedTab] = useState("vietnam");
 
-  // Chỉ giữ lại các thành phố từ 4 nước: Việt Nam, Đài Loan, Nhật Bản, Anh
   const cities = {
     vietnam: [
       { code: "HAN", name: t.hanoi, en: "Hanoi", ja: "ハノイ", zh: "河內" },
@@ -43,7 +41,7 @@ const CitySelector = ({ isOpen, onClose, onSelect, type }) => {
   ];
 
   const getCityName = (city) => {
-    // Trả về tên thành phố theo ngôn ngữ hiện tại
+    
     return city.name;
   };
 
@@ -76,7 +74,7 @@ const CitySelector = ({ isOpen, onClose, onSelect, type }) => {
       <div
         style={{
           width: "700px",
-          maxWidth: "90%",
+          maxWidth: "90vw",
           maxHeight: "80vh",
           backgroundColor: "#fff",
           borderRadius: "16px",
@@ -87,7 +85,7 @@ const CitySelector = ({ isOpen, onClose, onSelect, type }) => {
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
+       
         <div style={{
           display: "flex",
           justifyContent: "space-between",
@@ -111,7 +109,7 @@ const CitySelector = ({ isOpen, onClose, onSelect, type }) => {
           </button>
         </div>
 
-        {/* Search */}
+        
         <div style={{
           position: "relative",
           marginBottom: "20px",
@@ -139,7 +137,7 @@ const CitySelector = ({ isOpen, onClose, onSelect, type }) => {
           />
         </div>
 
-        {/* Tabs - 4 nước */}
+        
         <div style={{
           display: "flex",
           gap: "8px",
@@ -170,13 +168,13 @@ const CitySelector = ({ isOpen, onClose, onSelect, type }) => {
           ))}
         </div>
 
-        {/* City list */}
+        
         <div style={{
           overflowY: "auto",
           flex: 1,
           paddingRight: "8px",
         }}>
-          {/* Việt Nam */}
+         
           {selectedTab === "vietnam" && (
             <div>
               <h4 style={{
@@ -231,7 +229,7 @@ const CitySelector = ({ isOpen, onClose, onSelect, type }) => {
             </div>
           )}
 
-          {/* Đài Loan */}
+         
           {selectedTab === "taiwan" && (
             <div>
               <h4 style={{
@@ -286,7 +284,7 @@ const CitySelector = ({ isOpen, onClose, onSelect, type }) => {
             </div>
           )}
 
-          {/* Nhật Bản */}
+        
           {selectedTab === "japan" && (
             <div>
               <h4 style={{
@@ -341,7 +339,7 @@ const CitySelector = ({ isOpen, onClose, onSelect, type }) => {
             </div>
           )}
 
-          {/* Anh */}
+          
           {selectedTab === "uk" && (
             <div>
               <h4 style={{

@@ -1,0 +1,49 @@
+spring:
+  datasource:
+    # Cấu hình MS SQL Server 
+    url: jdbc:sqlserver://localhost:1433;databaseName=ticket_booking_db;encrypt=true;trustServerCertificate=true;
+    username: sa
+    password: Toibingu1234
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.SQLServerDialect
+        use_nationalized_character_data: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: "tungg.test.booking@gmail.com"
+    password: "fajy rcyu obxd vqzf" # Fake or temp password. Mật khẩu ứng dụng Gmail
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+server:
+  port: 8080
+
+jwt:
+  secret: YTJiM2M0ZDVlNmY3ZzhoOWkwajFrMmwzbTRuNW82cDdxOHI5czB0MXUydjN3NHg1eTZ6
+  expiration: 86400000
+
+# VNPay Sandbox Configuration (Demo credentials từ sandbox.vnpayment.vn)
+vnpay:
+  tmn-code: 3JZ7QBUX
+  hash-secret: WOX93XWGGLC2YUHTZUOB7ALN5LPG8VRE
+  pay-url: https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
+  return-url: http://localhost:8080/api/payment/vnpay-return
+  api-url: https://sandbox.vnpayment.vn/merchant_webapi/api/transaction
+
+# Swagger
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /v3/api-docs

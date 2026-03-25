@@ -1,4 +1,3 @@
-// src/components/BusSearch.jsx
 import React, { useState } from "react";
 import { useLanguage } from "../context/LanguageContext";
 import { FaCalendarAlt, FaSearch, FaBus } from "react-icons/fa";
@@ -13,7 +12,7 @@ const BusSearch = () => {
   const [showFromDropdown, setShowFromDropdown] = useState(false);
   const [showToDropdown, setShowToDropdown] = useState(false);
 
-  // Danh sách tỉnh thành Việt Nam
+
   const vietnamCities = [
     { id: "hanoi", name: "Hà Nội" },
     { id: "hcmc", name: "TP. Hồ Chí Minh" },
@@ -65,7 +64,7 @@ const BusSearch = () => {
       boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
       marginTop: "20px",
     }}>
-      {/* Header với icon xe khách */}
+     
       <div style={{
         display: "flex",
         alignItems: "center",
@@ -80,14 +79,14 @@ const BusSearch = () => {
         </h3>
       </div>
 
-      {/* From - To */}
+  
       <div style={{
         display: "grid",
         gridTemplateColumns: "1fr auto 1fr",
         gap: "12px",
         marginBottom: "16px",
       }}>
-        {/* From */}
+   
         <div style={{
           position: "relative",
         }}>
@@ -119,7 +118,7 @@ const BusSearch = () => {
             </div>
           </div>
 
-          {/* Dropdown chọn tỉnh thành - From */}
+       
           {showFromDropdown && (
             <div
               style={{
@@ -157,7 +156,7 @@ const BusSearch = () => {
           )}
         </div>
 
-        {/* Swap button */}
+    
         <button 
           onClick={handleSwapCities}
           style={{
@@ -176,7 +175,7 @@ const BusSearch = () => {
           <IoIosSwap style={{ fontSize: "20px", color: "#4f7cff" }} />
         </button>
 
-        {/* To */}
+
         <div style={{
           position: "relative",
         }}>
@@ -208,7 +207,7 @@ const BusSearch = () => {
             </div>
           </div>
 
-          {/* Dropdown chọn tỉnh thành - To */}
+   
           {showToDropdown && (
             <div
               style={{
@@ -247,7 +246,7 @@ const BusSearch = () => {
         </div>
       </div>
 
-      {/* Depart date */}
+
       <div style={{
         border: "1px solid #e0e0e0",
         borderRadius: "12px",
@@ -275,7 +274,7 @@ const BusSearch = () => {
         </div>
       </div>
 
-      {/* Search button */}
+
       <button
         onClick={handleSearch}
         style={{

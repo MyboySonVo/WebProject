@@ -1,19 +1,31 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import G from "../Picture/G.png";
 import FB from "../Picture/FB.png";
 import A from "../Picture/A.svg";
 import { IoIosWarning } from "react-icons/io";
 import { TiTick } from "react-icons/ti";
+import { GoogleLogin } from "@react-oauth/google";
+import { jwtDecode } from "jwt-decode";
+import { QRCodeSVG } from "qrcode.react";
 import { useLanguage } from "../context/LanguageContext";
+import { useAuth } from "../context/AuthContext";
 
-const Auth = ({ isOpen, onClose, onLoginSuccess }) => { // Thêm prop onLoginSuccess
+const Auth = ({ isOpen, onClose }) => {
   const [step, setStep] = useState(1);
+  const [mode, setMode] = useState("register"); 
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [apiError, setApiError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
-  const { t, currentLanguage } = useLanguage();
+   const { t, currentLanguage } = useLanguage();
+  const { loginSuccess } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const savedEmail = sessionStorage.getItem("tempEmail");
@@ -35,7 +47,7 @@ const Auth = ({ isOpen, onClose, onLoginSuccess }) => { // Thêm prop onLoginSuc
   if (!isOpen) return null;
 
   const isValidEmail = (email) => {
-    return email.includes('@gmail.com') && email.trim() !== '';
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
   };
 
   const isValidPassword = (password) => {
@@ -60,8 +72,11 @@ const Auth = ({ isOpen, onClose, onLoginSuccess }) => { // Thêm prop onLoginSuc
     setStep(2);
   };
 
-  const handleRegister = (password) => {
+  const isValidPhone = (value) => /^0\d{9}$/.test(value);
+
+  const handleRegister = async (password) => {
     setPasswordError("");
+    setApiError("");
     
     if (!password) {
       setPasswordError(t.passwordRequired);
@@ -72,100 +87,133 @@ const Auth = ({ isOpen, onClose, onLoginSuccess }) => { // Thêm prop onLoginSuc
       setPasswordError(t.passwordInvalid);
       return;
     }
-    
-    console.log("Đăng ký với:", email, password);
-    
-    setSuccessMessage(t.registerSuccess.replace("{email}", email));
-    setShowSuccess(true);
-    
-    clearTempData();
-    
-    setTimeout(() => {
-      setShowSuccess(false);
-    }, 3000);
-    
-    setTimeout(() => {
-      onClose();
-      setStep(1);
-      setEmail("");
-      setEmailError("");
-      setPasswordError("");
-      // Gọi callback onLoginSuccess với email khi đăng nhập thành công
-      if (onLoginSuccess) {
-        onLoginSuccess(email);
+
+    if (!fullName.trim() || !phone.trim()) {
+      setApiError("Vui lòng nhập đầy đủ họ tên và số điện thoại.");
+      return;
+    }
+
+    if (!isValidPhone(phone.trim())) {
+      setApiError("Số điện thoại phải bắt đầu bằng 0 và có đúng 10 chữ số.");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch("http://localhost:8080/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          fullName: fullName.trim(),
+          email: email.trim(),
+          password,
+          phone: phone.trim(),
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        const message = data?.message || "Đăng ký thất bại. Vui lòng thử lại.";
+        setApiError(message);
+        setIsSubmitting(false);
+        return;
       }
-    }, 1500);
+
+      if (data?.token) {
+        loginSuccess(data);
+      }
+
+      setSuccessMessage("Đăng ký thành công! Vui lòng kiểm tra email để lấy mã xác thực.");
+      setShowSuccess(true);
+
+      clearTempData();
+
+      setTimeout(() => {
+        onClose();
+        navigate(`/verify-email?email=${email}`);
+      }, 1500);
+    } catch (error) {
+      setApiError("Không thể kết nối đến máy chủ. Vui lòng kiểm tra lại backend.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleBack = () => {
     setStep(1);
-    setEmail("");
-    setEmailError("");
     setPasswordError("");
-    sessionStorage.removeItem("tempEmail");
+    setApiError("");
   };
 
-  // Thêm hàm xử lý đăng nhập với Google
-  const handleGoogleLogin = () => {
-    // Giả lập đăng nhập Google thành công với email demo
-    const demoEmail = "user@gmail.com";
-    console.log("Đăng nhập với Google:", demoEmail);
-    
-    setSuccessMessage(t.loginSuccess.replace("{email}", demoEmail));
-    setShowSuccess(true);
-    
-    setTimeout(() => {
-      setShowSuccess(false);
-    }, 3000);
-    
-    setTimeout(() => {
-      onClose();
-      if (onLoginSuccess) {
-        onLoginSuccess(demoEmail);
-      }
-    }, 1500);
+  const handleToggleMode = () => {
+    setMode((prev) => (prev === "register" ? "login" : "register"));
+    setStep(1);
+    setPasswordError("");
+    setApiError("");
   };
 
-  // Thêm hàm xử lý đăng nhập với Facebook
-  const handleFacebookLogin = () => {
-    // Giả lập đăng nhập Facebook thành công với email demo
-    const demoEmail = "user@facebook.com";
-    console.log("Đăng nhập với Facebook:", demoEmail);
-    
-    setSuccessMessage(t.loginSuccess.replace("{email}", demoEmail));
-    setShowSuccess(true);
-    
-    setTimeout(() => {
-      setShowSuccess(false);
-    }, 3000);
-    
-    setTimeout(() => {
-      onClose();
-      if (onLoginSuccess) {
-        onLoginSuccess(demoEmail);
-      }
-    }, 1500);
-  };
+  const handleLogin = async (password) => {
+    setPasswordError("");
+    setApiError("");
 
-  // Thêm hàm xử lý đăng nhập với Apple
-  const handleAppleLogin = () => {
-    // Giả lập đăng nhập Apple thành công với email demo
-    const demoEmail = "user@apple.com";
-    console.log("Đăng nhập với Apple:", demoEmail);
-    
-    setSuccessMessage(t.loginSuccess.replace("{email}", demoEmail));
-    setShowSuccess(true);
-    
-    setTimeout(() => {
-      setShowSuccess(false);
-    }, 3000);
-    
-    setTimeout(() => {
-      onClose();
-      if (onLoginSuccess) {
-        onLoginSuccess(demoEmail);
+    if (!password) {
+      setPasswordError(t.passwordRequired);
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch("http://localhost:8080/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: email.trim(),
+          password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        const message = data?.message || "Đăng nhập thất bại. Vui lòng thử lại.";
+        setApiError(message);
+        setIsSubmitting(false);
+        return;
       }
-    }, 1500);
+
+      if (data?.token) {
+        loginSuccess(data);
+      }
+
+      setSuccessMessage("Đăng nhập thành công!");
+      setShowSuccess(true);
+
+      setTimeout(() => {
+        setShowSuccess(false);
+      }, 2000);
+
+      setTimeout(() => {
+        onClose();
+        setStep(1);
+        setEmail("");
+        setEmailError("");
+        setPasswordError("");
+        setFullName("");
+        setPhone("");
+        setApiError("");
+      }, 1000);
+    } catch (error) {
+      setApiError("Không thể kết nối đến máy chủ. Vui lòng kiểm tra lại backend.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const iconStyle = {
@@ -219,12 +267,14 @@ const Auth = ({ isOpen, onClose, onLoginSuccess }) => { // Thêm prop onLoginSuc
         style={{
           position: "relative",
           width: step === 1 ? "750px" : "500px",
+          maxWidth: "95vw",
           display: "flex",
           backgroundColor: "#fff",
           borderRadius: "12px",
           overflow: "hidden",
           boxShadow: "0 10px 40px rgba(0,0,0,0.4)",
           transition: "width 0.3s ease",
+           padding: "10px" 
         }}
         onClick={(e) => e.stopPropagation()}
       >
@@ -254,9 +304,26 @@ const Auth = ({ isOpen, onClose, onLoginSuccess }) => { // Thêm prop onLoginSuc
         {step === 1 && (
           <>
             <div style={{ flex: 1, padding: "50px 40px", display: "flex", flexDirection: "column" }}>
-              <h3 style={{ textAlign: "center", marginBottom: "30px", fontSize: "22px", fontWeight: "500" }}>
-                {t.authTitle}
-              </h3>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
+                <h3 style={{ margin: 0, fontSize: "22px", fontWeight: "500" }}>
+                  {t.authTitle}
+                </h3>
+                <button
+                  type="button"
+                  onClick={handleToggleMode}
+                  style={{
+                    border: "none",
+                    background: "none",
+                    color: "#4f7cff",
+                    cursor: "pointer",
+                    fontSize: "14px",
+                    fontWeight: "500",
+                    textDecoration: "underline",
+                  }}
+                >
+                  {mode === "register" ? "Đã có tài khoản? Đăng nhập" : "Chưa có tài khoản? Đăng ký"}
+                </button>
+              </div>
 
               <input
                 type="email"
@@ -305,7 +372,7 @@ const Auth = ({ isOpen, onClose, onLoginSuccess }) => { // Thêm prop onLoginSuc
                   color: "#fff",
                 }}
               >
-                {t.continueWithEmail}
+                {mode === "register" ? t.continueWithEmail : "Tiếp tục để đăng nhập"}
               </button>
 
               <div
@@ -317,29 +384,59 @@ const Auth = ({ isOpen, onClose, onLoginSuccess }) => { // Thêm prop onLoginSuc
                   margin: "10px 0 30px",
                 }}
               >
-                <span style={{ background: "#fff", padding: "0 15px", color: "#999", fontSize: "14px" }}>{t.or}</span>
+                <span style={{ background: "#fff", padding: "0 15px", color: "#999", fontSize: "14px" }}>hoặc</span>
               </div>
 
-              <button 
-                onClick={handleGoogleLogin}
-                style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "12px", padding: "12px", marginBottom: "12px", border: "1px solid #ddd", borderRadius: "4px", cursor: "pointer", fontSize: "15px", fontWeight: "500", width: "100%", backgroundColor: "#fff", color: "#333" }}
-              >
-                <img src={G} alt="Google" style={iconStyle} />
-                {t.loginWithGoogle}
-              </button>
+              <div style={{ marginBottom: "12px", width: "100%", display: "flex", justifyContent: "center" }}>
+                <GoogleLogin
+                  onSuccess={async (credentialResponse) => {
+                    const decoded = jwtDecode(credentialResponse.credential);
+                    try {
+                      const response = await fetch("http://localhost:8080/api/auth/google-login", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                          email: decoded.email,
+                          fullName: decoded.name,
+                          googleId: decoded.sub
+                        }),
+                      });
+                      const data = await response.json();
+                      if (response.ok) {
+                        loginSuccess(data);
+                        setSuccessMessage("Đăng nhập Google thành công!");
+                        setShowSuccess(true);
+                        setTimeout(() => {
+                          onClose();
+                          window.location.reload();
+                        }, 1500);
+                      } else {
+                        setApiError("Backend lỗi: " + (data.message || "Không xác định"));
+                        alert("Lỗi Backend: " + (data.message || "Không xác định"));
+                      }
+                    } catch (error) {
+                      setApiError("Lỗi kết nối: " + error.message);
+                      alert("Lỗi kết nối: " + error.message);
+                    }
+                  }}
+                  onError={() => {
+                    setApiError("Đăng nhập Google thất bại (Google Error)");
+                    alert("Google OAuth Error - Vui lòng kiểm tra Client ID và Origin");
+                  }}
+                  theme="outline"
+                  size="large"
+                  text="continue_with"
+                  shape="rectangular"
+                  width="100%"
+                />
+              </div>
 
-              <button 
-                onClick={handleFacebookLogin}
-                style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "12px", padding: "12px", marginBottom: "12px", border: "none", borderRadius: "4px", cursor: "pointer", fontSize: "15px", fontWeight: "500", width: "100%", backgroundColor: "#1877F2", color: "white" }}
-              >
+              <button style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "12px", padding: "12px", marginBottom: "12px", border: "none", borderRadius: "4px", cursor: "pointer", fontSize: "15px", fontWeight: "500", width: "100%", backgroundColor: "#1877F2", color: "white" }}>
                 <img src={FB} alt="Facebook" style={iconStyle} />
                 {t.loginWithFacebook}
               </button>
 
-              <button 
-                onClick={handleAppleLogin}
-                style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "12px", padding: "12px", marginBottom: "12px", border: "none", borderRadius: "4px", cursor: "pointer", fontSize: "15px", fontWeight: "500", width: "100%", backgroundColor: "#000", color: "white" }}
-              >
+              <button style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "12px", padding: "12px", marginBottom: "12px", border: "none", borderRadius: "4px", cursor: "pointer", fontSize: "15px", fontWeight: "500", width: "100%", backgroundColor: "#000", color: "white" }}>
                 <img src={A} alt="Apple" style={{ ...iconStyle, filter: "invert(1)" }} />
                 {t.loginWithApple}
               </button>
@@ -357,7 +454,25 @@ const Auth = ({ isOpen, onClose, onLoginSuccess }) => { // Thêm prop onLoginSuc
                 borderLeft: "1px solid #f0f0f0",
               }}
             >
-              <div style={{ width: "170px", height: "170px", backgroundColor: "#777", borderRadius: "8px", marginBottom: "25px" }}></div>
+             <div style={{ 
+                width: "170px", 
+                height: "170px", 
+                backgroundColor: "#fff", 
+                borderRadius: "12px", 
+                marginBottom: "25px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                padding: "10px",
+                boxShadow: "0 4px 12px rgba(0,0,0,0.05)"
+              }}>
+                <QRCodeSVG 
+                  value="http://localhost:5173" 
+                  size={150}
+                  level="H"
+                  includeMargin={false}
+                />
+              </div>
               <p style={{ textAlign: "center", fontSize: "14px", color: "#666", lineHeight: "1.6" }}>
                 {t.qrText} <br /> <span style={{ fontWeight: "600" }}>{t.qrHighlight}</span>
               </p>
@@ -374,7 +489,7 @@ const Auth = ({ isOpen, onClose, onLoginSuccess }) => { // Thêm prop onLoginSuc
               textAlign: "center",
               fontWeight: "600"
             }}>
-              {t.createAccount}
+              {mode === "register" ? t.createAccount : "Đăng nhập"}
             </h2>
             
             <p style={{ 
@@ -383,7 +498,7 @@ const Auth = ({ isOpen, onClose, onLoginSuccess }) => { // Thêm prop onLoginSuc
               textAlign: "center",
               fontSize: "16px"
             }}>
-              {t.setPassword}
+              {mode === "register" ? t.setPassword : `Nhập mật khẩu cho tài khoản ${email}`}
             </p>
             
             <div style={{
@@ -427,8 +542,86 @@ const Auth = ({ isOpen, onClose, onLoginSuccess }) => { // Thêm prop onLoginSuc
             <form onSubmit={(e) => {
               e.preventDefault();
               const password = e.target.password.value;
-              handleRegister(password);
+              if (mode === "register") {
+                handleRegister(password);
+              } else {
+                handleLogin(password);
+              }
             }}>
+              {mode === "register" && (
+              <>
+              <div style={{ marginBottom: "16px" }}>
+                <label
+                  style={{
+                    display: "block",
+                    marginBottom: "8px",
+                    fontSize: "14px",
+                    fontWeight: "500",
+                    color: "#555",
+                  }}
+                >
+                  Họ và tên
+                </label>
+                <input
+                  type="text"
+                  name="fullName"
+                  placeholder="Nhập họ và tên"
+                  value={fullName}
+                  onChange={(e) => {
+                    setFullName(e.target.value);
+                    setApiError("");
+                  }}
+                  style={{
+                    width: "100%",
+                    padding: "14px 16px",
+                    border: "2px solid #e0e0e0",
+                    borderRadius: "10px",
+                    fontSize: "15px",
+                    boxSizing: "border-box",
+                    outline: "none",
+                    marginBottom: "4px",
+                  }}
+                  required
+                />
+              </div>
+
+              <div style={{ marginBottom: "16px" }}>
+                <label
+                  style={{
+                    display: "block",
+                    marginBottom: "8px",
+                    fontSize: "14px",
+                    fontWeight: "500",
+                    color: "#555",
+                  }}
+                >
+                  Số điện thoại
+                </label>
+                <input
+                  type="tel"
+                  name="phone"
+                  placeholder="Nhập số điện thoại"
+                  value={phone}
+                  onChange={(e) => {
+                    setPhone(e.target.value);
+                    setApiError("");
+                  }}
+                  style={{
+                    width: "100%",
+                    padding: "14px 16px",
+                    border: "2px solid #e0e0e0",
+                    borderRadius: "10px",
+                    fontSize: "15px",
+                    boxSizing: "border-box",
+                    outline: "none",
+                    marginBottom: "4px",
+                  }}
+                  required
+                />
+              </div>
+              </>
+              )}
+
               <div style={{ marginBottom: "16px" }}>
                 <label style={{ 
                   display: "block", 
@@ -481,20 +674,55 @@ const Auth = ({ isOpen, onClose, onLoginSuccess }) => { // Thêm prop onLoginSuc
                   <span><IoIosWarning /></span> {passwordError}
                 </p>
               )}
+
+              {apiError && (
+                <p
+                  style={{
+                    color: "#ff4444",
+                    fontSize: "13px",
+                    marginBottom: "12px",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "4px",
+                  }}
+                >
+                  <span>
+                    <IoIosWarning />
+                  </span>
+                  {apiError}
+                </p>
+              )}
               
-              <p style={{
-                fontSize: "13px",
-                color: "#666",
-                marginBottom: "28px",
-                fontStyle: "italic",
-                background: "#f9f9f9",
-                padding: "12px",
-                borderRadius: "8px",
-                borderLeft: "3px solid #4f7cff",
-              }}>
-                <span style={{ fontWeight: "600" }}>{t.passwordRequirement}</span>
-              </p>
-              
+              {mode === "register" && (
+                <p style={{
+                  fontSize: "13px",
+                  color: "#666",
+                  marginBottom: "28px",
+                  fontStyle: "italic",
+                  background: "#f9f9f9",
+                  padding: "12px",
+                  borderRadius: "8px",
+                  borderLeft: "3px solid #4f7cff",
+                }}>
+                  <span style={{ fontWeight: "600" }}>{t.passwordRequirement}</span>
+                </p>
+              )}
+
+              {mode === "login" && (
+
+                <div style={{ textAlign: "right", marginBottom: "20px" }}>
+                  <span 
+                    onClick={() => {
+                      onClose();
+                      navigate("/forgot-password");
+                    }} 
+                    style={{ color: "#4f7cff", cursor: "pointer", fontSize: "14px", fontWeight: "500", textDecoration: "underline" }}
+                  >
+                    Quên mật khẩu?
+                  </span>
+                </div>
+              )}
+
               <button
                 type="submit"
                 style={{
@@ -511,10 +739,15 @@ const Auth = ({ isOpen, onClose, onLoginSuccess }) => { // Thêm prop onLoginSuc
                   transition: "background-color 0.2s",
                   boxShadow: "0 4px 10px rgba(79,124,255,0.3)",
                 }}
+                disabled={isSubmitting}
                 onMouseOver={(e) => e.target.style.backgroundColor = "#3a5fd0"}
                 onMouseOut={(e) => e.target.style.backgroundColor = "#4f7cff"}
               >
-                {t.registerAndLogin}
+                {isSubmitting
+                  ? "Đang xử lý..."
+                  : mode === "register"
+                    ? t.registerAndLogin
+                    : "Đăng nhập"}
               </button>
             </form>
             

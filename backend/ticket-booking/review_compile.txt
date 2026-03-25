@@ -1,0 +1,20 @@
+﻿[INFO] Scanning for projects...
+[INFO] 
+[INFO] --------------------------< com.booking:api >---------------------------
+[INFO] Building TicketBooking 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ api ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] Copying 0 resource from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ api ---
+[INFO] Recompiling the module because of added or removed source files.
+[INFO] Compiling 78 source files with javac [debug parameters release 17] to target\classes
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  5.558 s
+[INFO] Finished at: 2026-03-15T20:59:59+07:00
+[INFO] ------------------------------------------------------------------------

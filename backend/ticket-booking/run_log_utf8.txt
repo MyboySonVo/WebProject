@@ -1,0 +1,302 @@
+﻿[INFO] Scanning for projects...
+[INFO] 
+[INFO] --------------------------< com.booking:api >---------------------------
+[INFO] Building TicketBooking 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] >>> spring-boot:4.0.3:run (default-cli) > test-compile @ api >>>
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ api ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] Copying 0 resource from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ api ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ api ---
+[INFO] skip non existing resourceDirectory D:\clone repo\WebProject\backend\ticket-booking\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ api ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 1 source file with javac [debug parameters release 17] to target\test-classes
+[INFO] 
+[INFO] <<< spring-boot:4.0.3:run (default-cli) < test-compile @ api <<<
+[INFO] 
+[INFO] 
+[INFO] --- spring-boot:4.0.3:run (default-cli) @ api ---
+[INFO] Attaching agents: []
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.0.3)
+
+2026-03-15T13:43:32.968+07:00  INFO 20696 --- [           main] c.booking.api.TicketBookingApplication   : Starting TicketBookingApplication using Java 23.0.1 with PID 20696 (D:\clone repo\WebProject\backend\ticket-booking\target\classes started by tungg in D:\clone repo\WebProject\backend\ticket-booking)
+2026-03-15T13:43:32.970+07:00  INFO 20696 --- [           main] c.booking.api.TicketBookingApplication   : No active profile set, falling back to 1 default profile: "default"
+2026-03-15T13:43:33.563+07:00  INFO 20696 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-03-15T13:43:33.610+07:00  INFO 20696 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 42 ms. Found 9 JPA repository interfaces.
+2026-03-15T13:43:33.975+07:00  INFO 20696 --- [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
+2026-03-15T13:43:33.989+07:00  INFO 20696 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-03-15T13:43:33.989+07:00  INFO 20696 --- [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.18]
+2026-03-15T13:43:34.029+07:00  INFO 20696 --- [           main] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 1018 ms
+2026-03-15T13:43:34.163+07:00  INFO 20696 --- [           main] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-03-15T13:43:34.194+07:00  INFO 20696 --- [           main] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.2.4.Final
+2026-03-15T13:43:34.454+07:00  INFO 20696 --- [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-03-15T13:43:34.476+07:00  INFO 20696 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-03-15T13:43:34.784+07:00  INFO 20696 --- [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection ConnectionID:1 ClientConnectionId: 603d4c82-76b8-4fc2-8d77-3aaba14bd7e9
+2026-03-15T13:43:34.785+07:00  INFO 20696 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-03-15T13:43:34.871+07:00  WARN 20696 --- [           main] org.hibernate.orm.deprecation            : HHH90000025: SQLServerDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-03-15T13:43:34.885+07:00  INFO 20696 --- [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:sqlserver://localhost:1433;concatNullYieldsNull=ON;quotedIdentifier=ON;connectRetryInterval=10;connectRetryCount=1;maxResultBuffer=-1;sendTemporalDataTypesAsStringForBulkCopy=true;delayLoadingLobs=true;useFmtOnly=false;vectorTypeSupport=v1;cacheBulkCopyMetadata=false;bulkCopyForBatchInsertAllowEncryptedValueModifications=false;bulkCopyForBatchInsertTableLock=false;bulkCopyForBatchInsertKeepNulls=false;bulkCopyForBatchInsertKeepIdentity=false;bulkCopyForBatchInsertFireTriggers=false;bulkCopyForBatchInsertCheckConstraints=false;bulkCopyForBatchInsertBatchSize=0;useBulkCopyForBatchInsert=false;cancelQueryTimeout=-1;sslProtocol=TLS;calcBigDecimalPrecision=false;useDefaultJaasConfig=false;jaasConfigurationName=SQLJDBCDriver;statementPoolingCacheSize=0;serverPreparedStatementDiscardThreshold=10;enablePrepareOnFirstPreparedStatementCall=false;fips=false;socketTimeout=0;authentication=NotSpecified;authenticationScheme=nativeAuthentication;xopenStates=false;datetimeParameterType=datetime2;sendTimeAsDatetime=true;replication=false;trustStoreType=JKS;trustServerCertificate=true;TransparentNetworkIPResolution=true;iPAddressPreference=IPv4First;serverNameAsACE=false;sendStringParametersAsUnicode=true;selectMethod=direct;responseBuffering=adaptive;queryTimeout=-1;packetSize=8000;multiSubnetFailover=false;loginTimeout=30;lockTimeout=-1;lastUpdateCount=true;useDefaultGSSCredential=false;prepareMethod=prepexec;encrypt=true;disableStatementPooling=true;databaseName=ticket_booking_db;columnEncryptionSetting=Disabled;applicationName=Microsoft JDBC Driver for SQL Server;applicationIntent=readwrite;]
+	Database driver: Microsoft JDBC Driver 13.2 for SQL Server
+	Database dialect: SQLServerDialect
+	Database version: 16.0
+	Default catalog/schema: ticket_booking_db/dbo
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: 128
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-03-15T13:43:35.611+07:00  INFO 20696 --- [           main] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-03-15T13:43:37.072+07:00  INFO 20696 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-03-15T13:43:37.120+07:00  INFO 20696 --- [           main] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-03-15T13:43:37.796+07:00  INFO 20696 --- [           main] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-03-15T13:43:37.796+07:00  WARN 20696 --- [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-03-15T13:43:37.933+07:00  WARN 20696 --- [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-03-15T13:43:38.404+07:00  INFO 20696 --- [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
+2026-03-15T13:43:38.409+07:00  INFO 20696 --- [           main] c.booking.api.TicketBookingApplication   : Started TicketBookingApplication in 5.725 seconds (process running for 6.014)
+Hibernate: 
+    select
+        u1_0.user_id,
+        u1_0.email,
+        u1_0.enabled,
+        u1_0.full_name,
+        u1_0.password,
+        u1_0.phone,
+        u1_0.membership_level_id,
+        u1_0.reset_token,
+        u1_0.reset_token_expiry,
+        u1_0.role,
+        u1_0.verification_code 
+    from
+        nguoi_dung u1_0 
+    where
+        u1_0.email=?
+2026-03-15T13:43:38.526+07:00  INFO 20696 --- [           main] com.booking.api.config.AdminSeeder       : [AdminSeeder] Tαi kho?n admin@gmail.com ?π h?p l?, b? qua.
+Hibernate: 
+    select
+        count_big(*) 
+    from
+        dich_vu_bo_sung as1_0
+Hibernate: 
+    insert 
+    into
+        dich_vu_bo_sung
+        (price, service_name) 
+    values
+        (?, ?)
+Hibernate: 
+    insert 
+    into
+        dich_vu_bo_sung
+        (price, service_name) 
+    values
+        (?, ?)
+Hibernate: 
+    insert 
+    into
+        dich_vu_bo_sung
+        (price, service_name) 
+    values
+        (?, ?)
+Hibernate: 
+    insert 
+    into
+        dich_vu_bo_sung
+        (price, service_name) 
+    values
+        (?, ?)
+Hibernate: 
+    insert 
+    into
+        dich_vu_bo_sung
+        (price, service_name) 
+    values
+        (?, ?)
+Hibernate: 
+    insert 
+    into
+        dich_vu_bo_sung
+        (price, service_name) 
+    values
+        (?, ?)
+Hibernate: 
+    insert 
+    into
+        dich_vu_bo_sung
+        (price, service_name) 
+    values
+        (?, ?)
+Hibernate: 
+    insert 
+    into
+        dich_vu_bo_sung
+        (price, service_name) 
+    values
+        (?, ?)
+Hibernate: 
+    select
+        p1_0.provider_id,
+        p1_0.contact_info,
+        p1_0.provider_name,
+        p1_0.provider_type 
+    from
+        nha_cung_cap p1_0
+Hibernate: 
+    select
+        p1_0.provider_id,
+        p1_0.contact_info,
+        p1_0.provider_name,
+        p1_0.provider_type 
+    from
+        nha_cung_cap p1_0
+Hibernate: 
+    select
+        p1_0.provider_id,
+        p1_0.contact_info,
+        p1_0.provider_name,
+        p1_0.provider_type 
+    from
+        nha_cung_cap p1_0
+Hibernate: 
+    select
+        p1_0.provider_id,
+        p1_0.contact_info,
+        p1_0.provider_name,
+        p1_0.provider_type 
+    from
+        nha_cung_cap p1_0
+Hibernate: 
+    select
+        r1_0.route_id,
+        r1_0.destination,
+        r1_0.origin 
+    from
+        tuyen_duong r1_0
+Hibernate: 
+    select
+        r1_0.route_id,
+        r1_0.destination,
+        r1_0.origin 
+    from
+        tuyen_duong r1_0
+Hibernate: 
+    select
+        r1_0.route_id,
+        r1_0.destination,
+        r1_0.origin 
+    from
+        tuyen_duong r1_0
+Hibernate: 
+    select
+        r1_0.route_id,
+        r1_0.destination,
+        r1_0.origin 
+    from
+        tuyen_duong r1_0
+Hibernate: 
+    select
+        v1_0.vehicle_id,
+        v1_0.provider_id,
+        v1_0.total_seats,
+        v1_0.vehicle_type 
+    from
+        phuong_tien v1_0
+Hibernate: 
+    select
+        v1_0.vehicle_id,
+        v1_0.provider_id,
+        v1_0.total_seats,
+        v1_0.vehicle_type 
+    from
+        phuong_tien v1_0
+Hibernate: 
+    select
+        v1_0.vehicle_id,
+        v1_0.provider_id,
+        v1_0.total_seats,
+        v1_0.vehicle_type 
+    from
+        phuong_tien v1_0
+Hibernate: 
+    select
+        v1_0.vehicle_id,
+        v1_0.provider_id,
+        v1_0.total_seats,
+        v1_0.vehicle_type 
+    from
+        phuong_tien v1_0
+Hibernate: 
+    select
+        s1_0.seat_id,
+        s1_0.seat_number,
+        s1_0.seat_type,
+        s1_0.vehicle_id 
+    from
+        cho_ngoi s1_0 
+    where
+        s1_0.vehicle_id=?
+Hibernate: 
+    select
+        s1_0.seat_id,
+        s1_0.seat_number,
+        s1_0.seat_type,
+        s1_0.vehicle_id 
+    from
+        cho_ngoi s1_0 
+    where
+        s1_0.vehicle_id=?
+Hibernate: 
+    select
+        s1_0.seat_id,
+        s1_0.seat_number,
+        s1_0.seat_type,
+        s1_0.vehicle_id 
+    from
+        cho_ngoi s1_0 
+    where
+        s1_0.vehicle_id=?
+Hibernate: 
+    select
+        s1_0.seat_id,
+        s1_0.seat_number,
+        s1_0.seat_type,
+        s1_0.vehicle_id 
+    from
+        cho_ngoi s1_0 
+    where
+        s1_0.vehicle_id=?
+Hibernate: 
+    select
+        count_big(*) 
+    from
+        chuyen_di t1_0
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  07:01 min
+[INFO] Finished at: 2026-03-15T13:50:31+07:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.springframework.boot:spring-boot-maven-plugin:4.0.3:run (default-cli) on project api: Process terminated with exit code: 1 -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoExecutionException

@@ -1,0 +1,43 @@
+package com.booking.api.controller;
+
+import com.booking.api.dto.ChangePasswordRequest;
+import com.booking.api.dto.UserResponse;
+import com.booking.api.dto.UserUpdateRequest;
+import com.booking.api.service.UserService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
+
+@RestController
+@RequestMapping("/api/users")
+@RequiredArgsConstructor
+public class UserController {
+
+    private final UserService userService;
+
+    @GetMapping("/me")
+    public ResponseEntity<UserResponse> getMyProfile(
+            @AuthenticationPrincipal UserDetails userDetails) {
+        return ResponseEntity.ok(userService.getProfile(userDetails.getUsername()));
+    }
+
+    @PutMapping("/me")
+    public ResponseEntity<UserResponse> updateMyProfile(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @RequestBody UserUpdateRequest request) {
+        return ResponseEntity.ok(userService.updateProfile(userDetails.getUsername(), request));
+    }
+
+    @PutMapping("/me/password")
+    public ResponseEntity<Map<String, String>> changePassword(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @Valid @RequestBody ChangePasswordRequest request) {
+        userService.changePassword(userDetails.getUsername(), request.getOldPassword(), request.getNewPassword());
+        return ResponseEntity.ok(Map.of("message", "Đổi mật khẩu thành công!"));
+    }
+}
