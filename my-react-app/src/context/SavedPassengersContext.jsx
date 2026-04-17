@@ -28,7 +28,7 @@ export const SavedPassengersProvider = ({ children }) => {
     const fetchSavedPassengers = async () => {
         setLoading(true);
         try {
-            const res = await fetch('http://localhost:8080/api/saved-passengers', {
+            const res = await fetch('/api/saved-passengers', {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -47,7 +47,7 @@ export const SavedPassengersProvider = ({ children }) => {
     const addPassenger = async (passengerData) => {
         if (isAuthenticated && token) {
             try {
-                const res = await fetch('http://localhost:8080/api/saved-passengers', {
+                const res = await fetch('/api/saved-passengers', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -88,7 +88,7 @@ export const SavedPassengersProvider = ({ children }) => {
     const removePassenger = async (id) => {
         if (isAuthenticated && token) {
             try {
-                const res = await fetch(`http://localhost:8080/api/saved-passengers/${id}`, {
+                const res = await fetch(`/api/saved-passengers/${id}`, {
                     method: 'DELETE',
                     headers: { 'Authorization': `Bearer ${token}` }
                 });

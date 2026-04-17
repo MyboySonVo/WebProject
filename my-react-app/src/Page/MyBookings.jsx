@@ -4,6 +4,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Header from "../LayOut/Header";
 import Sidebar from "../components/Sidebar";
 import { useLanguage } from "../context/LanguageContext";
+import { TbTrain, TbBus } from "react-icons/tb";
+import { FaRegStar, FaPlane } from "react-icons/fa";
 
 const MyBookings = () => {
   const [bookings, setBookings] = useState([]);
@@ -15,10 +17,9 @@ const MyBookings = () => {
   const navigate = useNavigate();
   const [paymentMsg, setPaymentMsg] = useState(null);
 
-  // Modal Hoàn vé
+
   const [cancelModal, setCancelModal] = useState({ show: false, booking: null, loading: false, error: null, reason: "", success: false });
 
-  // Modal Đánh Giá
   const [reviewModal, setReviewModal] = useState({ show: false, booking: null, rating: 0, hovered: 0, comment: "", loading: false, error: null, success: false });
 
 
@@ -26,7 +27,7 @@ const MyBookings = () => {
     try {
       setLoading(true);
       const token = localStorage.getItem("authToken");
-      const res = await axios.get("http://localhost:8080/api/bookings", {
+      const res = await axios.get("/api/bookings", {
         headers: { Authorization: `Bearer ${token}` }
       });
       setBookings(res.data);
@@ -72,15 +73,15 @@ const MyBookings = () => {
     try {
       setCancelModal(prev => ({ ...prev, loading: true, error: null }));
       const token = localStorage.getItem("authToken");
-      await axios.post(`http://localhost:8080/api/refunds/request`, {
+      await axios.post(`/api/refunds/request`, {
         bookingId: cancelModal.booking.id,
         reason: cancelModal.reason
       }, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      
+
       setCancelModal(prev => ({ ...prev, loading: false, success: true }));
-      // Refresh list after 2s
+
       setTimeout(async () => {
         await fetchBookings();
         closeCancelModal();
@@ -90,11 +91,10 @@ const MyBookings = () => {
     }
   };
 
-  // Helper tính phí hoàn
+
   const getRefundInfo = (booking) => {
     if (!booking || !booking.departureTime) return { canRefund: false, penaltyPercent: 0, text: "" };
-    
-    // Tính số tiếng còn lại
+
     const depTime = new Date(booking.departureTime).getTime();
     const now = new Date().getTime();
     const diffHours = (depTime - now) / (1000 * 60 * 60);
@@ -108,7 +108,7 @@ const MyBookings = () => {
     }
   };
 
-  // Handlers cho Review Modal
+
   const openReviewModal = (booking) => {
     setReviewModal({ show: true, booking, rating: 0, hovered: 0, comment: "", loading: false, error: null, success: false });
   };
@@ -125,13 +125,13 @@ const MyBookings = () => {
     try {
       setReviewModal(prev => ({ ...prev, loading: true, error: null }));
       const token = localStorage.getItem("authToken");
-      await axios.post("http://localhost:8080/api/reviews", {
+      await axios.post("/api/reviews", {
         bookingId: reviewModal.booking.id,
         rating: reviewModal.rating,
         comment: reviewModal.comment
       }, { headers: { Authorization: `Bearer ${token}` } });
       setReviewModal(prev => ({ ...prev, loading: false, success: true }));
-      // Đóng modal sau 1.5 giây
+
       setTimeout(() => closeReviewModal(), 1500);
     } catch (err) {
       setReviewModal(prev => ({ ...prev, loading: false, error: err.response?.data?.message || err.message }));
@@ -151,7 +151,7 @@ const MyBookings = () => {
 
             {paymentMsg && (
               <div style={{ padding: 16, background: paymentMsg.includes('thành công') ? "#dcfce7" : "#fee2e2", color: paymentMsg.includes('thành công') ? "#16a34a" : "#dc2626", borderRadius: 8, marginBottom: 20, fontWeight: 700, border: `1px solid ${paymentMsg.includes('thành công') ? "#bbf7d0" : "#fecaca"}`, display: "flex", alignItems: "center", gap: 8 }}>
-                { paymentMsg.includes('thành công') ? "🎉" : "⚠️" }
+                {paymentMsg.includes('thành công') ? "🎉" : "⚠️"}
                 {paymentMsg}
               </div>
             )}
@@ -172,10 +172,10 @@ const MyBookings = () => {
                   const statusText = bk.status === "PAID" ? "Đã thanh toán" : bk.status === "CONFIRMED" ? "Đã xác nhận" : bk.status === "COMPLETED" ? "Đã hoàn thành" : bk.status === "CANCELLED" ? "Đã hủy/Hoàn" : "Chờ thanh toán";
                   const hasPendingRefund = bk.refundStatus === "PENDING";
                   const hasRejectedRefund = bk.refundStatus === "REJECTED";
-                  
+
                   return (
                     <div key={bk.id} style={{ background: "var(--bg-card)", border: "1px solid var(--border-light)", borderRadius: 12, padding: 20, boxShadow: "0 2px 10px rgba(0,0,0,0.02)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                      
+
                       {/* Left side info */}
                       <div>
                         <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 8 }}>
@@ -185,13 +185,13 @@ const MyBookings = () => {
                           <span style={{ fontSize: 13, color: "var(--text-secondary)", fontWeight: 600 }}>{t.ticketCode}: #{bk.id}</span>
                           <span style={{ fontSize: 13, color: "var(--text-muted)" }}>• {t.bookedAt}: {new Date(bk.bookingDate).toLocaleString("vi-VN")}</span>
                         </div>
-                        
+
                         <div style={{ fontSize: 18, fontWeight: 800, marginBottom: 4 }}>
                           {bk.origin} <span style={{ color: "var(--text-muted)", margin: "0 6px" }}>→</span> {bk.destination}
                         </div>
-                        
+
                         <div style={{ fontSize: 14, color: "#444", marginBottom: 8 }}>
-                          {bk.vehicleType === "PLANE" ? `✈️ ${t.flight}` : bk.vehicleType === "BUS" ? `🚌 ${t.bus}` : `🚂 ${t.train}`} 
+                          {bk.vehicleType === "PLANE" ? <> <FaPlane /> ${t.flight}</> : bk.vehicleType === "BUS" ? <><TbBus /> ${t.bus}</> : <><TbTrain /> {t.train}</>}
                           <span style={{ marginLeft: 6, color: "var(--text-muted)", fontWeight: 600 }}>({bk.providerName})</span>
                         </div>
 
@@ -219,7 +219,7 @@ const MyBookings = () => {
                             <b>Dịch vụ:</b> {bk.additionalServices.join(", ")}
                           </div>
                         )}
-                        
+
                         {bk.status === "CANCELLED" && bk.refundAmount > 0 && (
                           <div style={{ fontSize: 13, color: "#16a34a", fontWeight: 700, marginTop: 8 }}>
                             {t.refundedAmount}: {bk.refundAmount.toLocaleString("vi-VN")} đ
@@ -242,21 +242,21 @@ const MyBookings = () => {
                       {/* Right side Price & Actions */}
                       <div style={{ textAlign: "right" }}>
                         <div style={{ fontSize: 20, fontWeight: 800, color: "#ff6b00", marginBottom: 4 }}>
-                          {bk.totalPrice.toLocaleString("vi-VN")} đ
+                          {(bk.totalPrice || 0).toLocaleString("vi-VN")} đ
                         </div>
                         <div style={{ fontSize: 13, color: "#16a34a", fontWeight: "bold", marginBottom: 12 }}>
                           (Đã áp dụng ưu đãi thành viên)
                         </div>
-                        
+
                         <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
                           {bk.status === "CONFIRMED" && (
-                            <button 
+                            <button
                               onClick={async () => {
-                                if(window.confirm("Bạn xác nhận chuyến đi này đã hoàn thành? Hệ thống sẽ gửi thư khảo sát qua Email.")) {
+                                if (window.confirm("Bạn xác nhận chuyến đi này đã hoàn thành? Hệ thống sẽ gửi thư khảo sát qua Email.")) {
                                   try {
                                     setLoading(true);
                                     const token = localStorage.getItem("authToken");
-                                    await axios.put(`http://localhost:8080/api/bookings/${bk.id}/complete`, {}, { headers: { Authorization: `Bearer ${token}` }});
+                                    await axios.put(`/api/bookings/${bk.id}/complete`, {}, { headers: { Authorization: `Bearer ${token}` } });
                                     alert("Chuyến đi đã hoàn thành. Cảm ơn bạn!");
                                     await fetchBookings();
                                   } catch (e) {
@@ -273,13 +273,13 @@ const MyBookings = () => {
                           )}
 
                           {bk.status === "PENDING" && (
-                            <button 
+                            <button
                               onClick={async () => {
                                 try {
                                   setLoading(true);
                                   const token = localStorage.getItem("authToken");
-                                  const res = await axios.post(`http://localhost:8080/api/payment/resume`, 
-                                    { bookingId: bk.id, language: "vn" }, 
+                                  const res = await axios.post(`/api/payment/resume`,
+                                    { bookingId: bk.id, language: "vn" },
                                     { headers: { Authorization: `Bearer ${token}` } }
                                   );
                                   if (res.data && res.data.paymentUrl) {
@@ -300,7 +300,7 @@ const MyBookings = () => {
                           )}
 
                           {bk.status !== "CANCELLED" && bk.status !== "COMPLETED" && !hasPendingRefund && (
-                            <button 
+                            <button
                               onClick={() => openCancelModal(bk)}
                               style={{ padding: "8px 16px", borderRadius: 6, border: "1px solid #ef4444", background: "var(--bg-card)", color: "#ef4444", fontWeight: 700, cursor: "pointer", fontSize: 13, transition: "0.2s" }}
                               onMouseOver={e => { e.target.style.background = "#fee2e2" }}
@@ -317,7 +317,7 @@ const MyBookings = () => {
                               onMouseOver={e => { e.target.style.background = "#e0e7ff" }}
                               onMouseOut={e => { e.target.style.background = "#eff6ff" }}
                             >
-                              Gửi Đánh Giá ⭐️
+                              Gửi Đánh Giá <FaRegStar />
                             </button>
                           )}
                         </div>
@@ -343,11 +343,11 @@ const MyBookings = () => {
               <h3 style={{ fontSize: 20, fontWeight: 800, marginBottom: 16, color: "var(--text-heading)" }}>
                 Xác nhận hoàn/hủy vé
               </h3>
-              
+
               <div style={{ background: "var(--bg-input)", border: "1px solid var(--border-light)", padding: 16, borderRadius: 8, marginBottom: 20 }}>
                 <p style={{ margin: "0 0 8px 0", fontSize: 14 }}><b>Chuyến:</b> {cancelModal.booking.origin} → {cancelModal.booking.destination}</p>
                 <p style={{ margin: "0 0 8px 0", fontSize: 14 }}><b>Khởi hành:</b> {new Date(cancelModal.booking.departureTime).toLocaleString("vi-VN")}</p>
-                <p style={{ margin: 0, fontSize: 14 }}><b>Tổng tiền đã đặt:</b> <span style={{ color: "#ff6b00", fontWeight: 700 }}>{cancelModal.booking.totalPrice.toLocaleString("vi-VN")} đ</span></p>
+                <p style={{ margin: 0, fontSize: 14 }}><b>Tổng tiền đã đặt:</b> <span style={{ color: "#ff6b00", fontWeight: 700 }}>{(cancelModal.booking.totalPrice || 0).toLocaleString("vi-VN")} đ</span></p>
               </div>
 
               <div style={{ padding: 16, borderRadius: 8, background: refundInfo.canRefund ? "#eff6ff" : "#fee2e2", border: `1px solid ${refundInfo.canRefund ? "#bfdbfe" : "#fca5a5"}`, marginBottom: 24 }}>
@@ -357,7 +357,7 @@ const MyBookings = () => {
                 <div style={{ fontSize: 13, color: refundInfo.canRefund ? "#1e3a8a" : "#7f1d1d", lineHeight: 1.5 }}>
                   {refundInfo.text}
                 </div>
-                
+
                 {refundInfo.canRefund && (
                   <div style={{ marginTop: 12, paddingTop: 12, borderTop: `1px solid ${refundInfo.canRefund ? "#bfdbfe" : "#fca5a5"}` }}>
                     <div style={{ display: "flex", justifyContent: "space-between", fontSize: 14, marginBottom: 4 }}>
@@ -398,13 +398,13 @@ const MyBookings = () => {
 
               {cancelModal.success && (
                 <div style={{ padding: 16, background: "#dcfce7", color: "#16a34a", borderRadius: 8, fontSize: 14, marginBottom: 20, fontWeight: 700, textAlign: "center", border: "1px solid #bbf7d0" }}>
-                  🎉 Yêu cầu hoàn vé đã được gửi thành công!<br/>
+                  🎉 Yêu cầu hoàn vé đã được gửi thành công!<br />
                   <span style={{ fontWeight: 400, fontSize: 13 }}>Vui lòng chờ Admin duyệt. Bạn có thể theo dõi trạng thái tại đây.</span>
                 </div>
               )}
 
               <div style={{ display: "flex", gap: 12, justifyContent: "flex-end" }}>
-                <button 
+                <button
                   onClick={closeCancelModal}
                   disabled={cancelModal.loading}
                   style={{ padding: "10px 20px", borderRadius: 8, border: "1px solid var(--border-input)", background: "var(--bg-card)", fontWeight: 700, cursor: "pointer", color: "var(--text-secondary)" }}
@@ -412,7 +412,7 @@ const MyBookings = () => {
                   Đóng
                 </button>
                 {refundInfo.canRefund && !cancelModal.success && (
-                  <button 
+                  <button
                     onClick={handleConfirmCancel}
                     disabled={cancelModal.loading}
                     style={{ padding: "10px 20px", borderRadius: 8, border: "none", background: cancelModal.loading ? "#fca5a5" : "#ef4444", color: "#fff", fontWeight: 700, cursor: cancelModal.loading ? "not-allowed" : "pointer", transition: "0.2s" }}

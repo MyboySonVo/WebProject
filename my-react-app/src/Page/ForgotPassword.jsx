@@ -18,7 +18,7 @@ const ForgotPassword = () => {
         setMessage({ type: "", text: "" });
 
         try {
-            await axios.post("http://localhost:8080/api/auth/forgot-password", { email });
+            await axios.post("/api/auth/forgot-password", { email });
             setStep(2);
             setMessage({ type: "success", text: "Mã OTP đã được gửi đến email của bạn!" });
         } catch (err) {
@@ -39,7 +39,7 @@ const ForgotPassword = () => {
         setMessage({ type: "", text: "" });
 
         try {
-            await axios.post("http://localhost:8080/api/auth/reset-password", {
+            await axios.post("/api/auth/reset-password", {
                 email,
                 newPassword,
                 otpCode: otp

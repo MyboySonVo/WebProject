@@ -13,7 +13,7 @@ import { useAuth } from "../context/AuthContext";
 
 const Auth = ({ isOpen, onClose }) => {
   const [step, setStep] = useState(1);
-  const [mode, setMode] = useState("register"); 
+  const [mode, setMode] = useState("register");
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
@@ -23,7 +23,7 @@ const Auth = ({ isOpen, onClose }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
-   const { t, currentLanguage } = useLanguage();
+  const { t, currentLanguage } = useLanguage();
   const { loginSuccess } = useAuth();
   const navigate = useNavigate();
 
@@ -57,17 +57,17 @@ const Auth = ({ isOpen, onClose }) => {
 
   const handleEmailSubmit = (submittedEmail) => {
     setEmailError("");
-    
+
     if (!submittedEmail.trim()) {
       setEmailError(t.emailRequired);
       return;
     }
-    
+
     if (!isValidEmail(submittedEmail)) {
       setEmailError(t.emailInvalid);
       return;
     }
-    
+
     setEmail(submittedEmail.trim());
     setStep(2);
   };
@@ -77,12 +77,12 @@ const Auth = ({ isOpen, onClose }) => {
   const handleRegister = async (password) => {
     setPasswordError("");
     setApiError("");
-    
+
     if (!password) {
       setPasswordError(t.passwordRequired);
       return;
     }
-    
+
     if (!isValidPassword(password)) {
       setPasswordError(t.passwordInvalid);
       return;
@@ -101,7 +101,7 @@ const Auth = ({ isOpen, onClose }) => {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch("http://localhost:8080/api/auth/register", {
+      const response = await fetch("/api/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -168,7 +168,7 @@ const Auth = ({ isOpen, onClose }) => {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch("http://localhost:8080/api/auth/login", {
+      const response = await fetch("/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -274,7 +274,7 @@ const Auth = ({ isOpen, onClose }) => {
           overflow: "hidden",
           boxShadow: "0 10px 40px rgba(0,0,0,0.4)",
           transition: "width 0.3s ease",
-           padding: "10px" 
+          padding: "10px"
         }}
         onClick={(e) => e.stopPropagation()}
       >
@@ -344,7 +344,7 @@ const Auth = ({ isOpen, onClose }) => {
                   outline: "none",
                 }}
               />
-              
+
               {emailError && (
                 <p style={{
                   color: "#ff4444",
@@ -358,7 +358,7 @@ const Auth = ({ isOpen, onClose }) => {
                   <span><IoIosWarning /></span> {emailError}
                 </p>
               )}
-              
+
               <button
                 onClick={() => handleEmailSubmit(email)}
                 style={{
@@ -392,7 +392,7 @@ const Auth = ({ isOpen, onClose }) => {
                   onSuccess={async (credentialResponse) => {
                     const decoded = jwtDecode(credentialResponse.credential);
                     try {
-                      const response = await fetch("http://localhost:8080/api/auth/google-login", {
+                      const response = await fetch("/api/auth/google-login", {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({
@@ -446,25 +446,25 @@ const Auth = ({ isOpen, onClose }) => {
 
         {step === 2 && (
           <div style={{ flex: 1, padding: "50px 40px" }}>
-            <h2 style={{ 
-              marginBottom: "16px", 
-              fontSize: "28px", 
-              color: "var(--text-main)", 
+            <h2 style={{
+              marginBottom: "16px",
+              fontSize: "28px",
+              color: "var(--text-main)",
               textAlign: "center",
               fontWeight: "600"
             }}>
               {mode === "register" ? t.createAccount : "Đăng nhập"}
             </h2>
-            
-            <p style={{ 
-              marginBottom: "24px", 
-              color: "var(--text-secondary)", 
+
+            <p style={{
+              marginBottom: "24px",
+              color: "var(--text-secondary)",
               textAlign: "center",
               fontSize: "16px"
             }}>
               {mode === "register" ? t.setPassword : `Nhập mật khẩu cho tài khoản ${email}`}
             </p>
-            
+
             <div style={{
               padding: "16px 20px",
               background: "#f0f7ff",
@@ -476,8 +476,8 @@ const Auth = ({ isOpen, onClose }) => {
               border: "1px solid #d4e4ff",
             }}>
               <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                <span style={{ 
-                  fontWeight: "600", 
+                <span style={{
+                  fontWeight: "600",
                   fontSize: "16px",
                   color: "#1a1a1a",
                   wordBreak: "break-all"
@@ -485,7 +485,7 @@ const Auth = ({ isOpen, onClose }) => {
                   {email}
                 </span>
               </div>
-              <button 
+              <button
                 onClick={handleBack}
                 style={{
                   background: "none",
@@ -502,7 +502,7 @@ const Auth = ({ isOpen, onClose }) => {
                 {t.notYou}
               </button>
             </div>
-            
+
             <form onSubmit={(e) => {
               e.preventDefault();
               const password = e.target.password.value;
@@ -513,84 +513,84 @@ const Auth = ({ isOpen, onClose }) => {
               }
             }}>
               {mode === "register" && (
-              <>
-              <div style={{ marginBottom: "16px" }}>
-                <label
-                  style={{
-                    display: "block",
-                    marginBottom: "8px",
-                    fontSize: "14px",
-                    fontWeight: "500",
-                    color: "var(--text-secondary)",
-                  }}
-                >
-                  Họ và tên
-                </label>
-                <input
-                  type="text"
-                  name="fullName"
-                  placeholder="Nhập họ và tên"
-                  value={fullName}
-                  onChange={(e) => {
-                    setFullName(e.target.value);
-                    setApiError("");
-                  }}
-                  style={{
-                    width: "100%",
-                    padding: "14px 16px",
-                    border: "2px solid #e0e0e0",
-                    borderRadius: "10px",
-                    fontSize: "15px",
-                    boxSizing: "border-box",
-                    outline: "none",
-                    marginBottom: "4px",
-                  }}
-                  required
-                />
-              </div>
+                <>
+                  <div style={{ marginBottom: "16px" }}>
+                    <label
+                      style={{
+                        display: "block",
+                        marginBottom: "8px",
+                        fontSize: "14px",
+                        fontWeight: "500",
+                        color: "var(--text-secondary)",
+                      }}
+                    >
+                      Họ và tên
+                    </label>
+                    <input
+                      type="text"
+                      name="fullName"
+                      placeholder="Nhập họ và tên"
+                      value={fullName}
+                      onChange={(e) => {
+                        setFullName(e.target.value);
+                        setApiError("");
+                      }}
+                      style={{
+                        width: "100%",
+                        padding: "14px 16px",
+                        border: "2px solid #e0e0e0",
+                        borderRadius: "10px",
+                        fontSize: "15px",
+                        boxSizing: "border-box",
+                        outline: "none",
+                        marginBottom: "4px",
+                      }}
+                      required
+                    />
+                  </div>
 
-              <div style={{ marginBottom: "16px" }}>
-                <label
-                  style={{
-                    display: "block",
-                    marginBottom: "8px",
-                    fontSize: "14px",
-                    fontWeight: "500",
-                    color: "var(--text-secondary)",
-                  }}
-                >
-                  Số điện thoại
-                </label>
-                <input
-                  type="tel"
-                  name="phone"
-                  placeholder="Nhập số điện thoại"
-                  value={phone}
-                  onChange={(e) => {
-                    setPhone(e.target.value);
-                    setApiError("");
-                  }}
-                  style={{
-                    width: "100%",
-                    padding: "14px 16px",
-                    border: "2px solid #e0e0e0",
-                    borderRadius: "10px",
-                    fontSize: "15px",
-                    boxSizing: "border-box",
-                    outline: "none",
-                    marginBottom: "4px",
-                  }}
-                  required
-                />
-              </div>
-              </>
+                  <div style={{ marginBottom: "16px" }}>
+                    <label
+                      style={{
+                        display: "block",
+                        marginBottom: "8px",
+                        fontSize: "14px",
+                        fontWeight: "500",
+                        color: "var(--text-secondary)",
+                      }}
+                    >
+                      Số điện thoại
+                    </label>
+                    <input
+                      type="tel"
+                      name="phone"
+                      placeholder="Nhập số điện thoại"
+                      value={phone}
+                      onChange={(e) => {
+                        setPhone(e.target.value);
+                        setApiError("");
+                      }}
+                      style={{
+                        width: "100%",
+                        padding: "14px 16px",
+                        border: "2px solid #e0e0e0",
+                        borderRadius: "10px",
+                        fontSize: "15px",
+                        boxSizing: "border-box",
+                        outline: "none",
+                        marginBottom: "4px",
+                      }}
+                      required
+                    />
+                  </div>
+                </>
               )}
 
               <div style={{ marginBottom: "16px" }}>
-                <label style={{ 
-                  display: "block", 
-                  marginBottom: "8px", 
-                  fontSize: "14px", 
+                <label style={{
+                  display: "block",
+                  marginBottom: "8px",
+                  fontSize: "14px",
                   fontWeight: "500",
                   color: "var(--text-secondary)"
                 }}>
@@ -624,7 +624,7 @@ const Auth = ({ isOpen, onClose }) => {
                   required
                 />
               </div>
-              
+
               {passwordError && (
                 <p style={{
                   color: "#ff4444",
@@ -656,7 +656,7 @@ const Auth = ({ isOpen, onClose }) => {
                   {apiError}
                 </p>
               )}
-              
+
               {mode === "register" && (
                 <p style={{
                   fontSize: "13px",
@@ -675,11 +675,11 @@ const Auth = ({ isOpen, onClose }) => {
               {mode === "login" && (
 
                 <div style={{ textAlign: "right", marginBottom: "20px" }}>
-                  <span 
+                  <span
                     onClick={() => {
                       onClose();
                       navigate("/forgot-password");
-                    }} 
+                    }}
                     style={{ color: "var(--primary)", cursor: "pointer", fontSize: "14px", fontWeight: "500", textDecoration: "underline" }}
                   >
                     Quên mật khẩu?
@@ -714,7 +714,7 @@ const Auth = ({ isOpen, onClose }) => {
                     : "Đăng nhập"}
               </button>
             </form>
-            
+
             <p style={{
               fontSize: "12px",
               color: "var(--text-muted)",

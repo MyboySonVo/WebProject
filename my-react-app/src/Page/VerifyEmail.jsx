@@ -22,7 +22,7 @@ const VerifyEmail = () => {
         setMessage({ type: "", text: "" });
 
         try {
-            const response = await axios.post(`http://localhost:8080/api/auth/verify-email?email=${email}&code=${otp}`);
+            const response = await axios.post(`/api/auth/verify-email?email=${email}&code=${otp}`);
             setMessage({ type: "success", text: "Xác thực thành công! Đang chuyển hướng..." });
             
   

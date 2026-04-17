@@ -21,7 +21,7 @@ const AdminReviews = () => {
 
     const fetchReviews = async () => {
       try {
-        const res = await axios.get("http://localhost:8080/api/reviews/all", {
+        const res = await axios.get("/api/reviews/all", {
           headers: { Authorization: `Bearer ${token}` }
         });
         setReviews(res.data);

@@ -23,7 +23,7 @@ const AdminRevenue = () => {
   const fetchRevenue = async () => {
     try {
       setLoading(true);
-      const res = await fetch("http://localhost:8080/api/admin/revenue", {
+      const res = await fetch("/api/admin/revenue", {
         headers: {
           Authorization: `Bearer ${token}`
         }

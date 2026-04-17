@@ -353,7 +353,7 @@ const OrderByPackage = () => {
       const totalAmount = calculateTotal();
       const bookingId = Date.now();
       const res = await axios.post(
-        "http://localhost:8080/api/payment/create",
+        "/api/payment/create",
         { bookingId, language: "vn" },
         { headers: { Authorization: `Bearer ${token}` } }
       );

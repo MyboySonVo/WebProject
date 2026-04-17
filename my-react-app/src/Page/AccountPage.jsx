@@ -3,7 +3,7 @@ import axios from "axios";
 import Sidebar from "../components/Sidebar";
 import { useTheme } from "../context/ThemeContext";
 
-const API = "http://localhost:8080";
+const API = "";
 
 const MEMBERSHIP_CONFIG = {
   "Đồng":     { color: "#b45309", bg: "#fef3c7", icon: "🥉", next: "Bạc",      nextPoints: 100 },

@@ -31,7 +31,7 @@ const ProviderRefunds = () => {
   const fetchRefunds = async () => {
     try {
       setLoading(true);
-      const res = await axios.get("http://localhost:8080/api/refunds/all", {
+      const res = await axios.get("/api/refunds/all", {
         headers: { Authorization: `Bearer ${token}` }
       });
       setRefunds(res.data);
@@ -46,7 +46,7 @@ const ProviderRefunds = () => {
   const handleApprove = async (refundId) => {
     if (!window.confirm("Bạn xác nhận duyệt hoàn tiền cho yêu cầu này?")) return;
     try {
-      await axios.put(`http://localhost:8080/api/refunds/${refundId}/approve`, {}, {
+      await axios.put(`/api/refunds/${refundId}/approve`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
       await fetchRefunds();
@@ -63,7 +63,7 @@ const ProviderRefunds = () => {
   const handleReject = async () => {
     try {
       setRejectModal(prev => ({ ...prev, loading: true }));
-      await axios.put(`http://localhost:8080/api/refunds/${rejectModal.refundId}/reject`, 
+      await axios.put(`/api/refunds/${rejectModal.refundId}/reject`, 
         { note: rejectModal.note },
         { headers: { Authorization: `Bearer ${token}` } }
       );

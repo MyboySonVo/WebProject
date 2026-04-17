@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useLanguage } from "../context/LanguageContext";
+import { RiTimerLine } from "react-icons/ri";
+import { MdOutlineCancel } from "react-icons/md";
 
-const API_BASE = "http://localhost:8080/api";
+const API_BASE = "/api";
 
 const AdminTrips = () => {
   const { token, user } = useAuth();
@@ -554,10 +556,10 @@ const AdminTrips = () => {
                   <div style={{ display: "flex", gap: 6 }}>
                     <button onClick={() => setDelayModal({ show: true, trip, newDeparture: "", newArrival: "", reason: "", loading: false })}
                       style={{ padding: "4px 10px", borderRadius: 4, border: "none", background: "#f59e0b", color: "#fff", cursor: "pointer", fontWeight: 600, fontSize: 12 }}
-                    >⏰ Hoãn</button>
+                    ><RiTimerLine />Hoãn</button>
                     <button onClick={() => setCancelAdminModal({ show: true, trip, reason: "", loading: false })}
                       style={{ padding: "4px 10px", borderRadius: 4, border: "none", background: "#ef4444", color: "#fff", cursor: "pointer", fontWeight: 600, fontSize: 12 }}
-                    >❌ Hủy</button>
+                    ><MdOutlineCancel />Hủy</button>
                   </div>
                 </td>
               </tr>

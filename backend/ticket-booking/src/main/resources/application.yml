@@ -5,6 +5,10 @@ spring:
     username: sa
     password: Toibingu1234
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    hikari:
+      connection-timeout: 60000
+      maximum-pool-size: 10
+      idle-timeout: 30000
   jpa:
     hibernate:
       ddl-auto: update
@@ -18,7 +22,7 @@ spring:
     host: smtp.gmail.com
     port: 587
     username: "tungg.test.booking@gmail.com"
-    password: "fajy rcyu obxd vqzf" # Fake or temp password. Mật khẩu ứng dụng Gmail
+    password: "fajy rcyu obxd vqzf" 
     properties:
       mail:
         smtp:

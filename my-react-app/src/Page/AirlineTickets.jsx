@@ -123,7 +123,7 @@ const AirlineTickets = () => {
   const [promoCode, setPromoCode] = useState("");
   const [selectedSeatClass, setSelectedSeatClass] = useState("");
 
-  const API_BASE = "http://localhost:8080/api";
+  const API_BASE = "/api";
   const todayISO = useMemo(() => new Date().toISOString().split("T")[0], []);
 
   useEffect(() => {
@@ -1333,7 +1333,7 @@ const AirlineTickets = () => {
                       <button type="button"
                         onClick={async () => {
                           try {
-                            const res = await axios.post("http://localhost:8080/api/payment/create", { bookingId: bookingResult.id, language: "vn" }, { headers: { Authorization: `Bearer ${token}` } });
+                            const res = await axios.post("/api/payment/create", { bookingId: bookingResult.id, language: "vn" }, { headers: { Authorization: `Bearer ${token}` } });
                             if (res.data && res.data.paymentUrl) window.location.href = res.data.paymentUrl;
                           } catch { alert("Lỗi tạo link VNPay, vui lòng thử lại."); }
                         }}
